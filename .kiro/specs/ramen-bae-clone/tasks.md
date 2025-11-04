@@ -19,7 +19,7 @@
   - _Requirements: 9.1, 9.2, 9.3_
 
 - [ ] 3. Database schema and seed data
-  - [ ] 3.1 Create products table with all required fields
+  - [x] 3.1 Create products table with all required fields
     - Write migration for products table (id, slug, name, description, price, images, category, tags, inventory, nutrition_facts, ingredients, allergens, features, accent_color, created_at, updated_at)
     - _Requirements: 2.3, 3.1, 3.3_
   
