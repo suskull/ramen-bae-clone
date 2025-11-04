@@ -23,19 +23,19 @@
     - Write migration for products table (id, slug, name, description, price, images, category, tags, inventory, nutrition_facts, ingredients, allergens, features, accent_color, created_at, updated_at)
     - _Requirements: 2.3, 3.1, 3.3_
   
-  - [ ] 3.2 Create categories table
+  - [x] 3.2 Create categories table
     - Write migration for categories table (id, name, slug, icon)
     - _Requirements: 2.1_
   
-  - [ ] 3.3 Create reviews table
+  - [x] 3.3 Create reviews table
     - Write migration for reviews table (id, product_id, user_id, user_name, rating, title, body, verified, media, helpful, created_at)
     - _Requirements: 5.1, 5.2_
   
-  - [ ] 3.4 Create cart tables
+  - [x] 3.4 Create cart tables
     - Write migration for carts and cart_items tables
     - _Requirements: 4.1, 4.6_
   
-  - [ ] 3.5 Seed sample product data
+  - [x] 3.5 Seed sample product data
     - Create seed script with sample products for all categories (Mixes, Single Toppings, Bundles, Seasoning and Sauce, Merch)
     - Include product images, nutrition facts, and features
     - _Requirements: 2.1, 2.3, 3.3_
