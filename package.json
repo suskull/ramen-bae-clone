@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start"
   },
   "dependencies": {
@@ -17,13 +17,18 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@radix-ui/react-slot": "^1.2.3",
     "@tailwindcss/postcss": "^4.1.16",
     "@types/node": "^24.10.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "dotenv": "^17.2.3",
     "supabase": "^2.54.11",
+    "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.16",
+    "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.9.3"
   }
 }

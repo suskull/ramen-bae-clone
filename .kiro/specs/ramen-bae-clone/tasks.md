@@ -2,8 +2,8 @@
 
 ## Task List
 
-- [ ] 1. Project setup and configuration
-  - Initialize Next.js 15 with App Router and TypeScript
+- [x] 1. Project setup and configuration
+  - Initialize Next.js 16 with App Router and TypeScript
   - Configure Tailwind CSS with custom color scheme (#fe90b8, #F999BF, #96da2f)
   - Set up shadcn/ui component library
   - Configure Poppins font family

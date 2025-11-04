@@ -23,7 +23,7 @@ graph TB
 ### Technology Stack
 
 **Frontend:**
-- Next.js 15+ (Latest version with App Router)
+- Next.js 16+ (Latest version with App Router)
 - TypeScript for type safety
 - Tailwind CSS for styling
 - shadcn/ui for component library
