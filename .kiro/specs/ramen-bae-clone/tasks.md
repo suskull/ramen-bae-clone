@@ -10,7 +10,7 @@
   - Create base layout structure with globals.css
   - _Requirements: 8.1, 8.5_
 
-- [ ] 2. Supabase backend setup
+- [x] 2. Supabase backend setup
   - Initialize local Supabase project with Docker
   - Create database schema for products, categories, reviews, and cart
   - Set up Supabase client configuration for Next.js

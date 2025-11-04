@@ -1,0 +1,6 @@
+### Test Supabase Connection
+GET http://localhost:3000/api/test-db
+
+### Test with verbose output
+GET http://localhost:3000/api/test-db
+Accept: application/json
