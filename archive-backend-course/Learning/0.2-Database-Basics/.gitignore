@@ -1,0 +1,22 @@
+# Docker volumes (data persists in Docker volumes, not local files)
+postgres_data/
+pgadmin_data/
+
+# Backup files
+backups/*.sql
+backups/*.sql.gz
+
+# Local environment files
+.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
