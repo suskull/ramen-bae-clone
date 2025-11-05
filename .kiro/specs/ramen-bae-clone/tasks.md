@@ -40,15 +40,15 @@
     - Include product images, nutrition facts, and features
     - _Requirements: 2.1, 2.3, 3.3_
 
-- [ ] 4. Core UI components library
-  - [ ] 4.1 Create base UI components
+- [x] 4. Core UI components library
+  - [x] 4.1 Create base UI components
     - Implement Button component with primary/secondary variants
     - Implement Input component with validation states
     - Implement Modal component with animations
     - Implement Accordion component for FAQ
     - _Requirements: 7.3, 8.3_
   
-  - [ ] 4.2 Create layout components
+  - [x] 4.2 Create layout components
     - Implement Header component with logo, navigation menu, and cart icon
     - Implement sticky header behavior on scroll
     - Implement Footer component
