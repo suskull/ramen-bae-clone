@@ -73,7 +73,7 @@
     - _Requirements: 1.4_
 
 - [ ] 6. Product catalog and filtering
-  - [ ] 6.1 Create ProductCard component
+  - [x] 6.1 Create ProductCard component
     - Display product image, name, price, and review count
     - Implement hover effect with alternate image
     - Add "SOLD OUT" badge for out-of-stock products
