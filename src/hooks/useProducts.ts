@@ -7,12 +7,14 @@ import { queryKeys } from '@/lib/query-keys'
 export function useProducts(
   category: string = 'all',
   limit: number = 20,
-  offset: number = 0
+  offset: number = 0,
+  enabled: boolean = false
 ) {
   return useQuery({
     queryKey: [...queryKeys.products.list(category), limit, offset],
     queryFn: () => getProducts(category, limit, offset),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000, // 5 minutes,
+    enabled
   })
 }
 

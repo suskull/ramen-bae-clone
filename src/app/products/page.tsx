@@ -49,6 +49,7 @@ function ProductsContent() {
   const offset = (currentPage - 1) * PRODUCTS_PER_PAGE
   
   const { data: categories = [], isLoading: isLoadingCategories } = useCategories()
+
   
   // Pagination mode
   const { 
@@ -56,7 +57,7 @@ function ProductsContent() {
     isLoading: isLoadingProducts, 
     error: paginationError, 
     refetch: refetchPagination 
-  } = useProducts(currentCategory, PRODUCTS_PER_PAGE, offset)
+  } = useProducts(currentCategory, PRODUCTS_PER_PAGE, offset, !isInfiniteScroll )
 
   // Infinite scroll mode
   const {
@@ -67,7 +68,7 @@ function ProductsContent() {
     fetchNextPage,
     error: infiniteError,
     refetch: refetchInfinite,
-  } = useInfiniteProducts(currentCategory)
+  } = useInfiniteProducts(currentCategory, isInfiniteScroll)
 
   // Use appropriate data based on mode
   const products = isInfiniteScroll 
@@ -197,9 +198,9 @@ function ProductsContent() {
         )}
 
         {/* Products Grid - Infinite Scroll Mode */}
-        {!error && isInfiniteScroll && infiniteData && (
+        {!error && isInfiniteScroll && (
           <InfiniteProductGrid
-            pages={infiniteData.pages}
+            pages={infiniteData?.pages || []}
             isLoading={isLoadingInfinite}
             isFetchingNextPage={isFetchingNextPage}
             hasNextPage={hasNextPage || false}

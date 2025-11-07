@@ -6,10 +6,12 @@ import { queryKeys } from '@/lib/query-keys'
 
 const PRODUCTS_PER_PAGE = 12
 
-export function useInfiniteProducts(category: string = 'all') {
+export function useInfiniteProducts(category: string = 'all', enabled: boolean) {
   return useInfiniteQuery({
     queryKey: [...queryKeys.products.list(category), 'infinite'],
-    queryFn: ({ pageParam = 0 }) => getProducts(category, PRODUCTS_PER_PAGE, pageParam),
+    queryFn: ({ pageParam = 0 }) => {
+      return getProducts(category, PRODUCTS_PER_PAGE, pageParam)
+    },
     getNextPageParam: (lastPage) => {
       const { products, offset, limit, total } = lastPage
       if (!total || offset + products.length >= total) {
@@ -18,6 +20,7 @@ export function useInfiniteProducts(category: string = 'all') {
       return offset + limit // Next offset
     },
     initialPageParam: 0,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000, // 5 minutes,
+    enabled
   })
 }
