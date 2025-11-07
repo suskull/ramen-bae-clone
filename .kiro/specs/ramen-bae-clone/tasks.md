@@ -91,7 +91,7 @@
     - Update URL with category parameter
     - _Requirements: 2.1, 2.2_
   
-  - [ ] 6.4 Create products listing page
+  - [x] 6.4 Create products listing page
     - Implement /products page with ProductGrid
     - Add category filter integration
     - Implement pagination or infinite scroll

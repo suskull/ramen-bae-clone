@@ -15,7 +15,7 @@ export async function GET(request: Request) {
       .select(`
         *,
         category:categories(*)
-      `)
+      `, { count: 'exact' })
       .range(offset, offset + limit - 1)
       .order('created_at', { ascending: false })
     

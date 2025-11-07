@@ -19,3 +19,4 @@ export {
   AccordionTrigger, 
   AccordionContent 
 } from "./accordion"
+export { Pagination } from "./pagination"

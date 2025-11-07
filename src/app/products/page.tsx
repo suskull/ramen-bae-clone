@@ -1,21 +1,109 @@
 'use client'
 
-import { Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { Suspense, useState, useEffect } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { ProductGrid } from '@/components/product/ProductGrid'
+import { InfiniteProductGrid } from '@/components/product/InfiniteProductGrid'
 import { CategoryFilter } from '@/components/product/CategoryFilter'
+import { Pagination } from '@/components/ui/pagination'
 import { useProducts, useCategories } from '@/hooks/useProducts'
+import { useInfiniteProducts } from '@/hooks/useInfiniteProducts'
+
+const PRODUCTS_PER_PAGE = 12
 
 function ProductsContent() {
+  const router = useRouter()
   const searchParams = useSearchParams()
   const currentCategory = searchParams.get('category') || 'all'
+  const pageParam = searchParams.get('page')
+  const viewMode = searchParams.get('view') || 'infinite' // 'infinite' or 'pagination'
+  const [currentPage, setCurrentPage] = useState(1)
+  const [isInfiniteScroll, setIsInfiniteScroll] = useState(viewMode === 'infinite')
+  
+  // Update current page from URL
+  useEffect(() => {
+    const page = pageParam ? parseInt(pageParam, 10) : 1
+    setCurrentPage(page > 0 ? page : 1)
+  }, [pageParam])
+
+  // Update view mode from URL
+  useEffect(() => {
+    setIsInfiniteScroll(viewMode === 'infinite')
+  }, [viewMode])
+
+  // Reset to page 1 when category changes
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [currentCategory])
+
+  const toggleViewMode = () => {
+    const newMode = isInfiniteScroll ? 'pagination' : 'infinite'
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('view', newMode)
+    params.delete('page') // Reset page when switching modes
+    
+    const newUrl = `/products${params.toString() ? `?${params.toString()}` : ''}`
+    router.push(newUrl)
+  }
+  
+  const offset = (currentPage - 1) * PRODUCTS_PER_PAGE
   
   const { data: categories = [], isLoading: isLoadingCategories } = useCategories()
-  const { data: products = [], isLoading: isLoadingProducts, error, refetch } = useProducts(currentCategory)
+  
+  // Pagination mode
+  const { 
+    data: productsData, 
+    isLoading: isLoadingProducts, 
+    error: paginationError, 
+    refetch: refetchPagination 
+  } = useProducts(currentCategory, PRODUCTS_PER_PAGE, offset)
+
+  // Infinite scroll mode
+  const {
+    data: infiniteData,
+    isLoading: isLoadingInfinite,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    error: infiniteError,
+    refetch: refetchInfinite,
+  } = useInfiniteProducts(currentCategory)
+
+  // Use appropriate data based on mode
+  const products = isInfiniteScroll 
+    ? infiniteData?.pages.flatMap(page => page.products) || []
+    : productsData?.products || []
+  
+  const totalProducts = isInfiniteScroll
+    ? infiniteData?.pages[0]?.total || products.length
+    : productsData?.total || products.length
+  
+  const totalPages = Math.ceil(totalProducts / PRODUCTS_PER_PAGE)
+  const error = isInfiniteScroll ? infiniteError : paginationError
+  const isLoading = isInfiniteScroll ? isLoadingInfinite : isLoadingProducts
+  const refetch = isInfiniteScroll ? refetchInfinite : refetchPagination
 
   const categoryName = currentCategory === 'all' 
     ? 'All Products' 
     : categories.find(cat => cat.slug === currentCategory)?.name || 'Products'
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    
+    // Update URL with page parameter
+    const params = new URLSearchParams(searchParams.toString())
+    if (page === 1) {
+      params.delete('page')
+    } else {
+      params.set('page', page.toString())
+    }
+    
+    const newUrl = `/products${params.toString() ? `?${params.toString()}` : ''}`
+    router.push(newUrl)
+    
+    // Scroll to top of page
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -26,6 +114,28 @@ function ProductsContent() {
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
               {categoryName}
             </h1>
+            {/* View mode toggle */}
+            <button
+              onClick={toggleViewMode}
+              className="px-3 py-1.5 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center gap-2"
+              title={`Switch to ${isInfiniteScroll ? 'pagination' : 'infinite scroll'}`}
+            >
+              {isInfiniteScroll ? (
+                <>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                  </svg>
+                  <span>Pagination</span>
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                  <span>Infinite Scroll</span>
+                </>
+              )}
+            </button>
             {/* Refresh button */}
             <button
               onClick={() => refetch()}
@@ -41,7 +151,7 @@ function ProductsContent() {
             Discover our premium dried ramen toppings and elevate your noodle game
           </p>
           {/* Loading indicator */}
-          {(isLoadingProducts || isLoadingCategories) && (
+          {(isLoading || isLoadingCategories) && (
             <div className="mt-2 text-sm text-primary">
               Loading fresh data...
             </div>
@@ -86,24 +196,47 @@ function ProductsContent() {
           </div>
         )}
 
-        {/* Products Grid */}
-        {!error && (
-          <ProductGrid 
-            products={products}
-            isLoading={isLoadingProducts}
+        {/* Products Grid - Infinite Scroll Mode */}
+        {!error && isInfiniteScroll && infiniteData && (
+          <InfiniteProductGrid
+            pages={infiniteData.pages}
+            isLoading={isLoadingInfinite}
+            isFetchingNextPage={isFetchingNextPage}
+            hasNextPage={hasNextPage || false}
+            fetchNextPage={fetchNextPage}
             className="mb-12"
           />
         )}
 
-        {/* Results Count */}
-        {!isLoadingProducts && !error && products.length > 0 && (
-          <div className="text-center text-gray-600 mt-8">
-            Showing {products.length} product{products.length !== 1 ? 's' : ''}
-            {currentCategory !== 'all' && ` in ${categoryName}`}
-          </div>
+        {/* Products Grid - Pagination Mode */}
+        {!error && !isInfiniteScroll && (
+          <>
+            <ProductGrid 
+              products={products}
+              isLoading={isLoading}
+              className="mb-12"
+            />
+
+            {/* Pagination */}
+            {!isLoading && totalPages > 1 && (
+              <div className="mt-12">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              </div>
+            )}
+
+            {/* Results Count */}
+            {!isLoading && products.length > 0 && (
+              <div className="text-center text-gray-600 mt-8">
+                Showing {offset + 1}-{Math.min(offset + products.length, totalProducts)} of {totalProducts} product{totalProducts !== 1 ? 's' : ''}
+                {currentCategory !== 'all' && ` in ${categoryName}`}
+              </div>
+            )}
+          </>
         )}
-
-
       </div>
     </div>
   )

@@ -4,10 +4,14 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { getProducts, getCategories } from '@/lib/api/products'
 import { queryKeys } from '@/lib/query-keys'
 
-export function useProducts(category: string = 'all') {
+export function useProducts(
+  category: string = 'all',
+  limit: number = 20,
+  offset: number = 0
+) {
   return useQuery({
-    queryKey: queryKeys.products.list(category),
-    queryFn: () => getProducts(category),
+    queryKey: [...queryKeys.products.list(category), limit, offset],
+    queryFn: () => getProducts(category, limit, offset),
     staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }
