@@ -121,7 +121,7 @@
     - Reuse ProductCard component
     - _Requirements: 3.5_
   
-  - [ ] 7.5 Implement product detail page route
+  - [x] 7.5 Implement product detail page route
     - Create /products/[slug] dynamic route
     - Fetch product data from Supabase
     - Handle loading and error states
