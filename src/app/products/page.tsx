@@ -1,41 +1,21 @@
 'use client'
 
-import { useEffect, Suspense } from 'react'
+import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { ProductGrid } from '@/components/product/ProductGrid'
 import { CategoryFilter } from '@/components/product/CategoryFilter'
-import { useProductsCache } from '@/hooks/useProductsCache'
+import { useProducts, useCategories } from '@/hooks/useProducts'
 
 function ProductsContent() {
   const searchParams = useSearchParams()
-  const {
-    products,
-    categories,
-    isLoadingProducts,
-    isLoadingCategories,
-    error,
-    fetchProducts,
-    fetchCategories,
-    getCacheStats
-  } = useProductsCache()
-
-  // Fetch categories on component mount
-  useEffect(() => {
-    fetchCategories()
-  }, [fetchCategories])
-
-  // Fetch products when category changes
-  useEffect(() => {
-    const category = searchParams.get('category') || 'all'
-    fetchProducts(category)
-  }, [searchParams, fetchProducts])
-
   const currentCategory = searchParams.get('category') || 'all'
+  
+  const { data: categories = [], isLoading: isLoadingCategories } = useCategories()
+  const { data: products = [], isLoading: isLoadingProducts, error, refetch } = useProducts(currentCategory)
+
   const categoryName = currentCategory === 'all' 
     ? 'All Products' 
     : categories.find(cat => cat.slug === currentCategory)?.name || 'Products'
-
-    console.log(products, 'products')
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -46,13 +26,9 @@ function ProductsContent() {
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
               {categoryName}
             </h1>
-            {/* Cache refresh button */}
+            {/* Refresh button */}
             <button
-              onClick={() => {
-                const category = searchParams.get('category') || 'all'
-                fetchProducts(category)
-                fetchCategories()
-              }}
+              onClick={() => refetch()}
               className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
               title="Refresh data"
             >
@@ -99,9 +75,9 @@ function ProductsContent() {
               <h3 className="text-lg font-semibold text-red-800 mb-2">
                 Oops! Something went wrong
               </h3>
-              <p className="text-red-600">{error}</p>
+              <p className="text-red-600">{error instanceof Error ? error.message : 'An error occurred'}</p>
               <button
-                onClick={() => window.location.reload()}
+                onClick={() => refetch()}
                 className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
               >
                 Try Again
@@ -127,19 +103,7 @@ function ProductsContent() {
           </div>
         )}
 
-        {/* Debug Panel (Development Only) */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="mt-8 p-4 bg-gray-100 rounded-lg text-xs">
-            <details>
-              <summary className="cursor-pointer font-semibold text-gray-700 mb-2">
-                Cache Debug Info
-              </summary>
-              <pre className="text-gray-600 overflow-auto">
-                {JSON.stringify(getCacheStats(), null, 2)}
-              </pre>
-            </details>
-          </div>
-        )}
+
       </div>
     </div>
   )
