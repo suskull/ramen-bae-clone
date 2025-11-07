@@ -18,6 +18,8 @@ export async function GET(request: Request) {
       `, { count: 'exact' })
       .range(offset, offset + limit - 1)
       .order('created_at', { ascending: false })
+      .order('id', { ascending: true })
+
     
     // Filter by category if provided
     if (category && category !== 'all') {
