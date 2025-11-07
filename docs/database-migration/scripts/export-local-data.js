@@ -62,8 +62,6 @@ function exportTable(tableName) {
     const sql = `-- Data for ${tableName}\n` +
       `INSERT INTO ${tableName} (${columns.join(', ')})\nVALUES\n` +
       values.join(',\n') +
-      `\nON CONFLICT (id) DO UPDATE SET\n` +
-      columns.filter(c => c !== 'id').map(c => `  ${c} = EXCLUDED.${c}`).join(',\n') +
       ';\n\n';
     
     return sql;
@@ -82,9 +80,24 @@ let fullSQL = `-- ==============================================================
 -- This file contains all data from your local database
 -- Run this in production to sync data
 -- ============================================================================
+-- WARNING: This will DELETE existing data and replace with local data
+-- ============================================================================
 
 -- Disable triggers temporarily for faster import
 SET session_replication_role = replica;
+
+-- ============================================================================
+-- STEP 1: Delete existing data (in reverse order to respect foreign keys)
+-- ============================================================================
+DELETE FROM cart_items;
+DELETE FROM carts;
+DELETE FROM reviews;
+DELETE FROM products;
+DELETE FROM categories;
+
+-- ============================================================================
+-- STEP 2: Insert fresh data from local database
+-- ============================================================================
 
 `;
 
