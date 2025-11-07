@@ -116,7 +116,7 @@
     - Show ingredients list and allergen information
     - _Requirements: 3.4_
   
-  - [ ] 7.4 Create RelatedProducts component
+  - [x] 7.4 Create RelatedProducts component
     - Fetch and display products from the same category
     - Reuse ProductCard component
     - _Requirements: 3.5_

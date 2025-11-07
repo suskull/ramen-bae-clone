@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ChevronLeft, Minus, Plus, ShoppingCart, Check, Leaf, Award, Shield, Sparkles, Info } from 'lucide-react'
 import { ProductCarousel } from './ProductCarousel'
 import { NutritionFactsModal } from './NutritionFactsModal'
+import { RelatedProducts } from './RelatedProducts'
 import { Button } from '@/components/ui/button'
 import { Product, ProductImage, NutritionFacts } from '@/lib/supabase/types'
 import { cn, formatCurrency } from '@/lib/utils'
@@ -306,6 +307,11 @@ export function ProductDetailLayout({ product }: ProductDetailLayoutProps) {
               )}
             </div>
           </div>
+        </div>
+
+        {/* Related Products Section */}
+        <div className="mt-16 border-t border-gray-200 pt-12">
+          <RelatedProducts currentProduct={product} limit={4} />
         </div>
       </div>
 

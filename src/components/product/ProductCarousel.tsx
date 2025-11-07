@@ -85,9 +85,6 @@ export function ProductCarousel({
               className="object-cover pointer-events-none"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
               priority={currentIndex === 0}
-              onError={(e) => {
-                e.currentTarget.src = `https://via.placeholder.com/600x600/f5f5f5/999999?text=${encodeURIComponent(productName)}`
-              }}
             />
           </div>
 
@@ -154,9 +151,6 @@ export function ProductCarousel({
                 fill
                 className="object-cover"
                 sizes="80px"
-                onError={(e) => {
-                  e.currentTarget.src = `https://via.placeholder.com/80x80/f5f5f5/999999?text=${index + 1}`
-                }}
               />
             </button>
           ))}

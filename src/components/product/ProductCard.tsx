@@ -56,10 +56,6 @@ export function ProductCard({ product }: ProductCardProps) {
                   isHovered && hoverImage ? 'opacity-0' : 'opacity-100'
                 }`}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                onError={(e) => {
-                  // Fallback to placeholder if image fails to load
-                  e.currentTarget.src = `https://via.placeholder.com/400x400/f5f5f5/999999?text=${encodeURIComponent(product.name)}`
-                }}
               />
               {hoverImage && (
                 <Image
@@ -70,9 +66,6 @@ export function ProductCard({ product }: ProductCardProps) {
                     isHovered ? 'opacity-100' : 'opacity-0'
                   }`}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  onError={(e) => {
-                    e.currentTarget.src = `https://via.placeholder.com/400x400/f5f5f5/999999?text=${encodeURIComponent(product.name + ' Alt')}`
-                  }}
                 />
               )}
             </>
