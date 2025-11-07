@@ -29,8 +29,9 @@ export default function Home() {
               variant="primary"
               size="lg"
               className="text-lg px-12 py-4 h-auto rounded-full font-semibold tracking-wide hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl bg-primary hover:bg-primary/90"
+              asChild
             >
-              Shop Now
+              <a href="/products">Shop Now</a>
             </Button>
           </div>
         </div>

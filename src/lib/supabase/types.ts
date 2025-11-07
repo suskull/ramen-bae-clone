@@ -14,6 +14,7 @@ export interface Database {
           id: string
           name: string
           slug: string
+          description: string | null
           icon: string | null
           created_at: string
           updated_at: string
@@ -22,6 +23,7 @@ export interface Database {
           id?: string
           name: string
           slug: string
+          description?: string | null
           icon?: string | null
           created_at?: string
           updated_at?: string
@@ -30,6 +32,7 @@ export interface Database {
           id?: string
           name?: string
           slug?: string
+          description?: string | null
           icon?: string | null
           created_at?: string
           updated_at?: string

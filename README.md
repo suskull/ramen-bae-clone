@@ -55,6 +55,8 @@ pnpm install
 3. Set up environment variables
 ```bash
 cp .env.example .env.local
+# Edit .env.local with your credentials
+# See docs/ENVIRONMENT_QUICK_START.md for details
 ```
 
 4. Start local Supabase
@@ -111,6 +113,46 @@ This project follows a spec-driven development approach. See the `.kiro/specs/ra
 ## License
 
 MIT
+
+## Supabase Development
+
+### Workflow
+When making schema changes, always follow: **Local → Test → Migrate → Production**
+
+Quick guides:
+- **Quick Reference:** [docs/SUPABASE_QUICK_REFERENCE.md](./docs/SUPABASE_QUICK_REFERENCE.md)
+- **Complete Workflow:** [docs/SUPABASE_WORKFLOW.md](./docs/SUPABASE_WORKFLOW.md)
+- **Database Migration:** [docs/database-migration/README.md](./docs/database-migration/README.md)
+
+### Common Commands
+```bash
+# Create migration
+supabase migration new add_something
+
+# Apply locally
+supabase db reset
+
+# Generate types
+supabase gen types typescript --local > src/lib/supabase/database.types.ts
+
+# Deploy to production
+supabase db push
+```
+
+## Database Migration & Sync
+
+All database migration, sync, and seeding documentation is in `docs/database-migration/`.
+
+Quick commands:
+```bash
+# Export data from local
+node docs/database-migration/scripts/export-local-data.js
+
+# Verify production data
+./docs/database-migration/scripts/verify-production-data.sh
+```
+
+See [DATABASE_MIGRATION.md](./DATABASE_MIGRATION.md) for details.
 
 ## Archive
 

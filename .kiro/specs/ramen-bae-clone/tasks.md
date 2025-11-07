@@ -85,7 +85,7 @@
     - Add loading states and skeleton screens
     - _Requirements: 2.3, 6.3_
   
-  - [ ] 6.3 Implement category filtering
+  - [x] 6.3 Implement category filtering
     - Create category navigation/tabs (Mixes, Single Toppings, Bundles, Seasoning and Sauce, Merch)
     - Implement filter logic to show products by category
     - Update URL with category parameter
