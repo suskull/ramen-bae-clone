@@ -111,7 +111,7 @@
     - Implement "Add to Cart" button
     - _Requirements: 3.1, 3.3, 3.6_
   
-  - [ ] 7.3 Create nutrition facts modal
+  - [x] 7.3 Create nutrition facts modal
     - Implement modal to display nutritional information
     - Show ingredients list and allergen information
     - _Requirements: 3.4_

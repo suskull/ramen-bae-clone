@@ -2,10 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { ChevronLeft, Minus, Plus, ShoppingCart, Check, Leaf, Award, Shield, Sparkles } from 'lucide-react'
+import { ChevronLeft, Minus, Plus, ShoppingCart, Check, Leaf, Award, Shield, Sparkles, Info } from 'lucide-react'
 import { ProductCarousel } from './ProductCarousel'
+import { NutritionFactsModal } from './NutritionFactsModal'
 import { Button } from '@/components/ui/button'
-import { Product, ProductImage } from '@/lib/supabase/types'
+import { Product, ProductImage, NutritionFacts } from '@/lib/supabase/types'
 import { cn, formatCurrency } from '@/lib/utils'
 
 interface ProductDetailLayoutProps {
@@ -16,9 +17,13 @@ export function ProductDetailLayout({ product }: ProductDetailLayoutProps) {
   const [quantity, setQuantity] = useState(1)
   const [isAddingToCart, setIsAddingToCart] = useState(false)
   const [addedToCart, setAddedToCart] = useState(false)
+  const [isNutritionModalOpen, setIsNutritionModalOpen] = useState(false)
 
   // Parse images from JSON
   const images = (product.images as unknown as ProductImage[]) || []
+  
+  // Parse nutrition facts from JSON
+  const nutritionFacts = product.nutrition_facts as unknown as NutritionFacts | null
   
   // Check if product is sold out
   const isSoldOut = product.inventory <= 0
@@ -155,6 +160,28 @@ export function ProductDetailLayout({ product }: ProductDetailLayoutProps) {
               </div>
             )}
 
+            {/* Nutrition Facts Button */}
+            {(nutritionFacts || product.ingredients.length > 0 || product.allergens.length > 0) && (
+              <div className="mb-6">
+                <button
+                  onClick={() => setIsNutritionModalOpen(true)}
+                  className="w-full flex items-center justify-center gap-2 bg-white border-2 rounded-lg px-4 py-3 hover:bg-gray-50 transition-colors"
+                  style={{ borderColor: product.accent_color }}
+                >
+                  <Info 
+                    className="w-5 h-5"
+                    style={{ color: product.accent_color }}
+                  />
+                  <span 
+                    className="font-semibold"
+                    style={{ color: product.accent_color }}
+                  >
+                    View Nutrition Facts & Ingredients
+                  </span>
+                </button>
+              </div>
+            )}
+
             {/* Inventory Status */}
             {!isSoldOut && product.inventory <= 10 && (
               <div className="mb-6">
@@ -281,6 +308,17 @@ export function ProductDetailLayout({ product }: ProductDetailLayoutProps) {
           </div>
         </div>
       </div>
+
+      {/* Nutrition Facts Modal */}
+      <NutritionFactsModal
+        isOpen={isNutritionModalOpen}
+        onClose={() => setIsNutritionModalOpen(false)}
+        nutritionFacts={nutritionFacts}
+        ingredients={product.ingredients}
+        allergens={product.allergens}
+        productName={product.name}
+        accentColor={product.accent_color}
+      />
     </div>
   )
 }
