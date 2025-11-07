@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useInView } from 'react-intersection-observer'
 import { ProductCard } from './ProductCard'
 import { Product, ReviewStats } from '@/lib/supabase/types'
 
@@ -45,30 +45,16 @@ export function InfiniteProductGrid({
   fetchNextPage,
   className = '',
 }: InfiniteProductGridProps) {
-  const observerTarget = useRef<HTMLDivElement>(null)
+  // Use react-intersection-observer for proper infinite scroll
+  const { ref, inView } = useInView({
+    threshold: 0,
+    rootMargin: '200px', // Start loading before reaching the bottom
+  })
 
-  // Intersection Observer for infinite scroll
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage()
-        }
-      },
-      { threshold: 0.1 }
-    )
-
-    const currentTarget = observerTarget.current
-    if (currentTarget) {
-      observer.observe(currentTarget)
-    }
-
-    return () => {
-      if (currentTarget) {
-        observer.unobserve(currentTarget)
-      }
-    }
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage])
+  // Trigger fetch when the sentinel comes into view
+  if (inView && hasNextPage && !isFetchingNextPage) {
+    fetchNextPage()
+  }
 
   const allProducts = pages.flatMap((page) => page.products)
 
@@ -123,6 +109,11 @@ export function InfiniteProductGrid({
         ))}
       </div>
 
+      {/* Intersection observer target - placed before loading indicator */}
+      {hasNextPage && !isFetchingNextPage && (
+        <div ref={ref} className="h-10" />
+      )}
+
       {/* Loading more indicator */}
       {isFetchingNextPage && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
@@ -131,9 +122,6 @@ export function InfiniteProductGrid({
           ))}
         </div>
       )}
-
-      {/* Intersection observer target */}
-      <div ref={observerTarget} className="h-10" />
 
       {/* End of results message */}
       {!hasNextPage && allProducts.length > 0 && (
