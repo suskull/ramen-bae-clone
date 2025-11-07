@@ -98,7 +98,7 @@
     - _Requirements: 2.1, 2.2, 2.3_
 
 - [ ] 7. Product detail page
-  - [ ] 7.1 Create ProductCarousel component
+  - [x] 7.1 Create ProductCarousel component
     - Implement image carousel with thumbnails
     - Add zoom functionality on hover
     - Support multiple product images
