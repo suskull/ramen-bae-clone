@@ -48,3 +48,14 @@ export async function getCategories(): Promise<Category[]> {
   
   return data.categories || []
 }
+
+export async function getProductBySlug(slug: string): Promise<ProductWithStats> {
+  const response = await fetch(`/api/products/${slug}`)
+  const data = await response.json()
+  
+  if (!response.ok) {
+    throw new Error(data.error || 'Failed to load product')
+  }
+  
+  return data.product
+}

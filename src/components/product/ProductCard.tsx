@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Star } from 'lucide-react'
 import { Product, ProductImage, ReviewStats } from '@/lib/supabase/types'
+import { formatCurrency } from '@/lib/utils'
 
 interface ProductCardProps {
   product: Product & {
@@ -23,18 +24,10 @@ export function ProductCard({ product }: ProductCardProps) {
   // Check if product is sold out
   const isSoldOut = product.inventory <= 0
   
-  // Format price
-  const formattedPrice = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD'
-  }).format(product.price)
-  
-  // Format compare at price if exists
+  // Format prices
+  const formattedPrice = formatCurrency(product.price)
   const formattedComparePrice = product.compare_at_price 
-    ? new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD'
-      }).format(product.compare_at_price)
+    ? formatCurrency(product.compare_at_price)
     : null
   
   // Review stats
