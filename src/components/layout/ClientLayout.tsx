@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import { Header } from './header'
 import { CartSidebar } from '@/components/cart/CartSidebar'
 import { useCartStore } from '@/stores/cart-store'
@@ -11,9 +12,15 @@ interface ClientLayoutProps {
 
 export function ClientLayout({ children }: ClientLayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const pathname = usePathname()
   
   // Get cart state from store
   const { itemCount, isOpen, openCart, closeCart } = useCartStore()
+
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
 
   // Prevent body scroll when mobile menu or cart is open
   useEffect(() => {

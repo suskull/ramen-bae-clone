@@ -62,7 +62,6 @@ export function Navigation({ className, onItemClick, isMobile = false }: Navigat
             custom={index}
             whileHover={!isMobile ? "hover" : undefined}
             whileTap={!isMobile ? "tap" : undefined}
-
           >
             <Link
               href={item.href}
@@ -80,7 +79,6 @@ export function Navigation({ className, onItemClick, isMobile = false }: Navigat
               {item.label}
               {isActive && !isMobile && (
                 <motion.div
-                  layoutId="activeIndicator"
                   className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full"
                   initial={false}
                   transition={{ type: "spring", stiffness: 380, damping: 30 }}
