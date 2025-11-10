@@ -6,9 +6,11 @@ import { ChevronLeft, Minus, Plus, ShoppingCart, Check, Leaf, Award, Shield, Spa
 import { ProductCarousel } from './ProductCarousel'
 import { NutritionFactsModal } from './NutritionFactsModal'
 import { RelatedProducts } from './RelatedProducts'
+import { ReviewList, ReviewForm } from '@/components/reviews'
 import { Button } from '@/components/ui/button'
 import { Product, ProductImage, NutritionFacts } from '@/lib/supabase/types'
 import { cn, formatCurrency } from '@/lib/utils'
+import { useProductReviews, useProductReviewStats, useMarkReviewHelpful } from '@/hooks/useReviews'
 
 interface ProductDetailLayoutProps {
   product: Product
@@ -19,6 +21,12 @@ export function ProductDetailLayout({ product }: ProductDetailLayoutProps) {
   const [isAddingToCart, setIsAddingToCart] = useState(false)
   const [addedToCart, setAddedToCart] = useState(false)
   const [isNutritionModalOpen, setIsNutritionModalOpen] = useState(false)
+  const [showReviewForm, setShowReviewForm] = useState(false)
+
+  // Fetch reviews and stats
+  const { data: reviews = [], isLoading: reviewsLoading } = useProductReviews(product.id)
+  const { data: reviewStats } = useProductReviewStats(product.id)
+  const markHelpfulMutation = useMarkReviewHelpful()
 
   // Parse images from JSON
   const images = (product.images as unknown as ProductImage[]) || []
@@ -70,6 +78,26 @@ export function ProductDetailLayout({ product }: ProductDetailLayoutProps) {
     
     // Reset added state after 2 seconds
     setTimeout(() => setAddedToCart(false), 2000)
+  }
+
+  const handleReviewHelpful = (reviewId: string) => {
+    markHelpfulMutation.mutate(reviewId)
+  }
+
+  const handleReviewSuccess = () => {
+    setShowReviewForm(false)
+    // Scroll to reviews section
+    const reviewsSection = document.getElementById('reviews-section')
+    if (reviewsSection) {
+      reviewsSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
+  // Default review stats if not loaded yet
+  const defaultReviewStats = {
+    averageRating: 0,
+    totalReviews: 0,
+    ratingDistribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }
   }
 
   return (
@@ -306,6 +334,66 @@ export function ProductDetailLayout({ product }: ProductDetailLayoutProps) {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+
+        {/* Reviews Section */}
+        <div id="reviews-section" className="mt-16 border-t border-gray-200 pt-12">
+          <div className="max-w-4xl mx-auto">
+            {/* Write Review Button */}
+            {!showReviewForm && (
+              <div className="mb-8 flex justify-between items-center">
+                <h2 className="text-3xl font-bold text-gray-900">
+                  Reviews
+                </h2>
+                <Button
+                  onClick={() => setShowReviewForm(true)}
+                  variant="primary"
+                  style={{ backgroundColor: product.accent_color }}
+                >
+                  Write a Review
+                </Button>
+              </div>
+            )}
+
+            {/* Review Form */}
+            {showReviewForm && (
+              <div className="mb-12 bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                <ReviewForm
+                  productId={product.id}
+                  onSuccess={handleReviewSuccess}
+                  onCancel={() => setShowReviewForm(false)}
+                />
+              </div>
+            )}
+
+            {/* Review List */}
+            {reviewStats && (
+              <ReviewList
+                reviews={reviews}
+                reviewStats={reviewStats}
+                onHelpful={handleReviewHelpful}
+                isLoading={reviewsLoading}
+              />
+            )}
+
+            {/* Loading State */}
+            {!reviewStats && reviewsLoading && (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading reviews...</p>
+              </div>
+            )}
+
+            {/* Default State */}
+            {!reviewStats && !reviewsLoading && (
+              <ReviewList
+                reviews={[]}
+                reviewStats={defaultReviewStats}
+                onHelpful={handleReviewHelpful}
+                isLoading={false}
+              />
+            )}
           </div>
         </div>
 

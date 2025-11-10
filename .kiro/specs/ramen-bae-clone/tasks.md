@@ -128,26 +128,26 @@
     - _Requirements: 3.1_
 
 - [ ] 8. Reviews system
-  - [ ] 8.1 Create ReviewCard component
+  - [x] 8.1 Create ReviewCard component
     - Display rating stars, customer name, and date
     - Show review title and body
     - Display customer photos/videos if available
     - Add "helpful" button functionality
     - _Requirements: 5.2, 5.3_
   
-  - [ ] 8.2 Create ReviewList component
+  - [x] 8.2 Create ReviewList component
     - Display average rating and total review count
     - Implement RatingHistogram showing 1-5 star distribution
     - List individual reviews with pagination
     - _Requirements: 5.1, 5.2, 5.5_
   
-  - [ ] 8.3 Create ReviewForm component
+  - [x] 8.3 Create ReviewForm component
     - Implement review submission form with rating selector
     - Add fields for title, body, and optional media upload
     - Validate user authentication before submission
     - _Requirements: 5.4_
   
-  - [ ] 8.4 Integrate reviews into product detail page
+  - [x] 8.4 Integrate reviews into product detail page
     - Add ReviewList component to product page
     - Implement "Write a review" button
     - _Requirements: 3.2, 5.1, 5.4_
