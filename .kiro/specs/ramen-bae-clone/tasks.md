@@ -153,25 +153,25 @@
     - _Requirements: 3.2, 5.1, 5.4_
 
 - [ ] 9. Shopping cart functionality
-  - [ ] 9.1 Set up cart state management
+  - [x] 9.1 Set up cart state management
     - Configure Zustand store for cart state
     - Implement add, remove, and update quantity actions
     - Persist cart to localStorage and Supabase
     - _Requirements: 4.1_
   
-  - [ ] 9.2 Create CartItem component
+  - [x] 9.2 Create CartItem component
     - Display product image, name, price, and quantity
     - Add quantity adjustment controls
     - Implement remove item button
     - _Requirements: 4.6_
   
-  - [ ] 9.3 Create ProgressBar component
+  - [x] 9.3 Create ProgressBar component
     - Show progress toward free shipping threshold ($40)
     - Display "Free Shipping" unlocked message at $40
     - Display "Free Fish Cakes" unlocked message at $60
     - _Requirements: 4.2, 4.3, 4.4_
   
-  - [ ] 9.4 Create CartSidebar component
+  - [x] 9.4 Create CartSidebar component
     - Implement slide-out sidebar (full-screen on mobile)
     - Display cart items with CartItem components
     - Show ProgressBar for shipping/gift thresholds
@@ -179,7 +179,7 @@
     - Show product recommendations when cart is empty
     - _Requirements: 4.1, 4.2, 4.5, 4.6, 4.7, 6.4_
   
-  - [ ] 9.5 Integrate cart with product pages
+  - [x] 9.5 Integrate cart with product pages
     - Connect "Add to Cart" buttons to cart store
     - Open CartSidebar after adding items
     - Update cart icon badge with item count
