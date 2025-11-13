@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Product, ProductImage, NutritionFacts } from '@/lib/supabase/types'
 import { cn, formatCurrency } from '@/lib/utils'
 import { useProductReviews, useProductReviewStats, useMarkReviewHelpful } from '@/hooks/useReviews'
-import { useCartStore } from '@/stores/cart-store'
+import { useCart } from '@/hooks/useCart'
 
 interface ProductDetailLayoutProps {
   product: Product
@@ -24,8 +24,8 @@ export function ProductDetailLayout({ product }: ProductDetailLayoutProps) {
   const [isNutritionModalOpen, setIsNutritionModalOpen] = useState(false)
   const [showReviewForm, setShowReviewForm] = useState(false)
 
-  // Cart store
-  const addItem = useCartStore((state) => state.addItem)
+  // Cart hook
+  const { addToCart } = useCart()
 
   // Fetch reviews and stats
   const { data: reviews = [], isLoading: reviewsLoading } = useProductReviews(product.id)
@@ -74,8 +74,8 @@ export function ProductDetailLayout({ product }: ProductDetailLayoutProps) {
   const handleAddToCart = async () => {
     setIsAddingToCart(true)
     
-    // Add item to cart store
-    addItem(product, quantity)
+    // Add item to cart using hook
+    addToCart(product, quantity)
     
     // Small delay for visual feedback
     await new Promise(resolve => setTimeout(resolve, 300))

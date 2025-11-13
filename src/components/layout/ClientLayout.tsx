@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { Header } from './header'
 import { CartSidebar } from '@/components/cart/CartSidebar'
-import { useCartStore } from '@/stores/cart-store'
+import { useCart } from '@/hooks/useCart'
 
 interface ClientLayoutProps {
   children: React.ReactNode
@@ -14,8 +14,8 @@ export function ClientLayout({ children }: ClientLayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const pathname = usePathname()
   
-  // Get cart state from store
-  const { itemCount, isOpen, openCart, closeCart } = useCartStore()
+  // Get cart state from hook
+  const { itemCount, isOpen, openCart } = useCart()
 
   // Scroll to top on route change
   useEffect(() => {
@@ -37,6 +37,8 @@ export function ClientLayout({ children }: ClientLayoutProps) {
 
   return (
     <>
+      {/* <AuthCartSync /> */}
+      
       <Header
         cartItemCount={itemCount}
         onCartClick={openCart}

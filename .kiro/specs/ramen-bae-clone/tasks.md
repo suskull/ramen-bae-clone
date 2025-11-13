@@ -185,32 +185,32 @@
     - Update cart icon badge with item count
     - _Requirements: 4.1_
 
-- [ ] 10. User authentication
-  - [ ] 10.1 Create sign-in modal
+- [x] 10. User authentication
+  - [x] 10.1 Create sign-in modal
     - Implement modal with email/password login form
     - Add "Create account" link
     - Add "Forgot password" link
     - _Requirements: 9.1, 9.3, 9.4_
   
-  - [ ] 10.2 Create sign-up page
+  - [x] 10.2 Create sign-up page
     - Implement registration form with email/password
     - Add form validation
     - Handle Supabase Auth registration
     - _Requirements: 9.3_
   
-  - [ ] 10.3 Implement password reset flow
+  - [x] 10.3 Implement password reset flow
     - Create password reset request page
     - Create password reset confirmation page
     - Integrate with Supabase Auth
     - _Requirements: 9.4_
   
-  - [ ] 10.4 Create user profile page
+  - [x] 10.4 Create user profile page
     - Display user information
     - Show order history (placeholder for now)
     - Add sign-out functionality
     - _Requirements: 9.2, 9.5_
   
-  - [ ] 10.5 Integrate auth with cart
+  - [x] 10.5 Integrate auth with cart
     - Associate cart with authenticated users
     - Merge guest cart with user cart on login
     - _Requirements: 4.1, 9.2_

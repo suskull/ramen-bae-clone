@@ -24,7 +24,7 @@ interface CartState {
   items: CartItem[];
   isOpen: boolean;
   cartId: string | null;
-  sessionId: string | null;
+  syncTimeoutId: NodeJS.Timeout | null;
   
   // Computed values
   itemCount: number;
@@ -44,7 +44,9 @@ interface CartState {
   
   // Supabase sync
   syncToSupabase: () => Promise<void>;
+  debouncedSync: () => void;
   loadFromSupabase: (userId: string) => Promise<void>;
+  mergeGuestCart: (userId: string) => Promise<void>;
 }
 
 // Gift thresholds configuration
@@ -53,9 +55,19 @@ const GIFT_THRESHOLDS: Gift[] = [
   { id: 'free-fish-cakes', name: 'Free Fish Cakes', threshold: 60, unlocked: false },
 ];
 
-// Generate a session ID for guest users
-const generateSessionId = (): string => {
-  return `session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+// Helper function to calculate cart totals
+const calculateCartTotals = (items: CartItem[]) => {
+  const subtotal = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+  const gifts = GIFT_THRESHOLDS.map((gift) => ({
+    ...gift,
+    unlocked: subtotal >= gift.threshold,
+  }));
+
+  return { subtotal, itemCount, gifts };
 };
 
 export const useCartStore = create<CartState>()(
@@ -64,7 +76,7 @@ export const useCartStore = create<CartState>()(
       items: [],
       isOpen: false,
       cartId: null,
-      sessionId: null,
+      syncTimeoutId: null,
       itemCount: 0,
       subtotal: 0,
       gifts: GIFT_THRESHOLDS,
@@ -104,17 +116,7 @@ export const useCartStore = create<CartState>()(
             newItems = [...state.items, newItem];
           }
 
-          const subtotal = newItems.reduce(
-            (sum, item) => sum + item.price * item.quantity,
-            0
-          );
-
-          const itemCount = newItems.reduce((sum, item) => sum + item.quantity, 0);
-
-          const gifts = GIFT_THRESHOLDS.map((gift) => ({
-            ...gift,
-            unlocked: subtotal >= gift.threshold,
-          }));
+          const { subtotal, itemCount, gifts } = calculateCartTotals(newItems);
 
           return {
             items: newItems,
@@ -125,8 +127,8 @@ export const useCartStore = create<CartState>()(
           };
         });
 
-        // Sync to Supabase after state update
-        get().syncToSupabase();
+        // Debounced sync to Supabase after state update
+        get().debouncedSync();
       },
 
       removeItem: (productId: string) => {
@@ -135,17 +137,7 @@ export const useCartStore = create<CartState>()(
             (item) => item.productId !== productId
           );
 
-          const subtotal = newItems.reduce(
-            (sum, item) => sum + item.price * item.quantity,
-            0
-          );
-
-          const itemCount = newItems.reduce((sum, item) => sum + item.quantity, 0);
-
-          const gifts = GIFT_THRESHOLDS.map((gift) => ({
-            ...gift,
-            unlocked: subtotal >= gift.threshold,
-          }));
+          const { subtotal, itemCount, gifts } = calculateCartTotals(newItems);
 
           return {
             items: newItems,
@@ -155,8 +147,8 @@ export const useCartStore = create<CartState>()(
           };
         });
 
-        // Sync to Supabase after state update
-        get().syncToSupabase();
+        // Debounced sync to Supabase after state update
+        get().debouncedSync();
       },
 
       updateQuantity: (productId: string, quantity: number) => {
@@ -170,17 +162,7 @@ export const useCartStore = create<CartState>()(
             item.productId === productId ? { ...item, quantity } : item
           );
 
-          const subtotal = newItems.reduce(
-            (sum, item) => sum + item.price * item.quantity,
-            0
-          );
-
-          const itemCount = newItems.reduce((sum, item) => sum + item.quantity, 0);
-
-          const gifts = GIFT_THRESHOLDS.map((gift) => ({
-            ...gift,
-            unlocked: subtotal >= gift.threshold,
-          }));
+          const { subtotal, itemCount, gifts } = calculateCartTotals(newItems);
 
           return {
             items: newItems,
@@ -190,8 +172,8 @@ export const useCartStore = create<CartState>()(
           };
         });
 
-        // Sync to Supabase after state update
-        get().syncToSupabase();
+        // Debounced sync to Supabase after state update
+        get().debouncedSync();
       },
 
       clearCart: () => {
@@ -202,7 +184,7 @@ export const useCartStore = create<CartState>()(
           gifts: GIFT_THRESHOLDS,
         });
 
-        // Sync to Supabase after state update
+        // Immediate sync for clearCart
         get().syncToSupabase();
       },
 
@@ -210,27 +192,42 @@ export const useCartStore = create<CartState>()(
       closeCart: () => set({ isOpen: false }),
       toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
 
+      debouncedSync: () => {
+        const state = get();
+        
+        // Clear existing timeout
+        if (state.syncTimeoutId) {
+          clearTimeout(state.syncTimeoutId);
+        }
+        
+        // Set new timeout for debounced sync (500ms delay)
+        const timeoutId = setTimeout(() => {
+          get().syncToSupabase();
+          set({ syncTimeoutId: null });
+        }, 500);
+        
+        set({ syncTimeoutId: timeoutId });
+      },
+
       syncToSupabase: async () => {
         try {
           const supabase = createClient();
           const { data: { user } } = await supabase.auth.getUser();
           
-          const state = get();
-          let { cartId, sessionId } = state;
-
-          // Generate session ID if not exists
-          if (!sessionId) {
-            sessionId = generateSessionId();
-            set({ sessionId });
+          // Skip sync for guest users - they use localStorage only
+          if (!user) {
+            return;
           }
+
+          const state = get();
+          let { cartId } = state;
 
           // Create or update cart in Supabase
           if (!cartId) {
             const { data: cart, error: cartError } = await supabase
               .from('carts')
               .insert({
-                user_id: user?.id || null,
-                session_id: sessionId,
+                user_id: user.id,
               })
               .select()
               .single();
@@ -250,10 +247,33 @@ export const useCartStore = create<CartState>()(
               .eq('id', cartId);
           }
 
-          // Delete existing cart items
-          await supabase.from('cart_items').delete().eq('cart_id', cartId);
+          // Get existing cart items from database
+          const { data: existingItems } = await supabase
+            .from('cart_items')
+            .select('product_id, quantity')
+            .eq('cart_id', cartId);
 
-          // Insert current cart items
+          const existingMap = new Map(
+            existingItems?.map(item => [item.product_id, item.quantity]) || []
+          );
+
+          const currentProductIds = new Set(state.items.map(item => item.productId));
+
+          // Find items to delete (in DB but not in current state)
+          const productsToDelete = Array.from(existingMap.keys()).filter(
+            productId => !currentProductIds.has(productId)
+          );
+
+          // Delete removed items in a single query
+          if (productsToDelete.length > 0) {
+            await supabase
+              .from('cart_items')
+              .delete()
+              .eq('cart_id', cartId)
+              .in('product_id', productsToDelete);
+          }
+
+          // Upsert current cart items using the composite unique constraint (cart_id, product_id)
           if (state.items.length > 0) {
             const cartItems = state.items.map((item) => ({
               cart_id: cartId,
@@ -261,12 +281,15 @@ export const useCartStore = create<CartState>()(
               quantity: item.quantity,
             }));
 
-            const { error: itemsError } = await supabase
+            const { error: upsertError } = await supabase
               .from('cart_items')
-              .insert(cartItems);
+              .upsert(cartItems, {
+                onConflict: 'cart_id,product_id',
+                ignoreDuplicates: false,
+              });
 
-            if (itemsError) {
-              console.error('Error syncing cart items:', itemsError);
+            if (upsertError) {
+              console.error('Error syncing cart items:', upsertError);
             }
           }
         } catch (error) {
@@ -325,28 +348,115 @@ export const useCartStore = create<CartState>()(
             };
           });
 
-          const subtotal = items.reduce(
-            (sum, item) => sum + item.price * item.quantity,
-            0
-          );
-
-          const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
-
-          const gifts = GIFT_THRESHOLDS.map((gift) => ({
-            ...gift,
-            unlocked: subtotal >= gift.threshold,
-          }));
+          const { subtotal, itemCount, gifts } = calculateCartTotals(items);
 
           set({
             items,
             cartId: cart.id,
-            sessionId: cart.session_id,
             subtotal,
             itemCount,
             gifts,
           });
         } catch (error) {
           console.error('Error loading cart from Supabase:', error);
+        }
+      },
+
+      mergeGuestCart: async (userId: string) => {
+        try {
+          const supabase = createClient();
+          const state = get();
+          const guestItems = state.items;
+
+          // If no guest items, just load user cart
+          if (guestItems.length === 0) {
+            await get().loadFromSupabase(userId);
+            return;
+          }
+
+          // Find or create user's cart
+          let { data: userCart, error: cartError } = await supabase
+            .from('carts')
+            .select('*')
+            .eq('user_id', userId)
+            .order('updated_at', { ascending: false })
+            .limit(1)
+            .single();
+
+          if (cartError || !userCart) {
+            // Create new cart for user
+            const { data: newCart, error: createError } = await supabase
+              .from('carts')
+              .insert({
+                user_id: userId,
+              })
+              .select()
+              .single();
+
+            if (createError) {
+              console.error('Error creating user cart:', createError);
+              return;
+            }
+
+            userCart = newCart;
+          }
+
+          // Load existing cart items
+          const { data: existingItems, error: itemsError } = await supabase
+            .from('cart_items')
+            .select('*')
+            .eq('cart_id', userCart.id);
+
+          if (itemsError) {
+            console.error('Error loading existing cart items:', itemsError);
+            return;
+          }
+
+          // Merge guest items with existing items
+          const mergedItems = new Map<string, number>();
+
+          // Add existing items
+          existingItems?.forEach((item: any) => {
+            mergedItems.set(item.product_id, item.quantity);
+          });
+
+          // Add or update with guest items (combine quantities)
+          guestItems.forEach((item) => {
+            const existingQty = mergedItems.get(item.productId) || 0;
+            mergedItems.set(item.productId, existingQty + item.quantity);
+          });
+
+          // Upsert merged items using the composite unique constraint
+          const itemsToUpsert = Array.from(mergedItems.entries()).map(
+            ([productId, quantity]) => ({
+              cart_id: userCart.id,
+              product_id: productId,
+              quantity,
+            })
+          );
+
+          const { error: upsertError } = await supabase
+            .from('cart_items')
+            .upsert(itemsToUpsert, {
+              onConflict: 'cart_id,product_id',
+              ignoreDuplicates: false,
+            });
+
+          if (upsertError) {
+            console.error('Error merging cart items:', upsertError);
+            return;
+          }
+
+          // Update cart timestamp
+          await supabase
+            .from('carts')
+            .update({ updated_at: new Date().toISOString() })
+            .eq('id', userCart.id);
+
+          // Load the merged cart
+          await get().loadFromSupabase(userId);
+        } catch (error) {
+          console.error('Error merging guest cart:', error);
         }
       },
     }),
@@ -356,8 +466,16 @@ export const useCartStore = create<CartState>()(
       partialize: (state) => ({
         items: state.items,
         cartId: state.cartId,
-        sessionId: state.sessionId,
       }),
+      onRehydrateStorage: () => (state) => {
+        // Recalculate computed values after rehydration
+        if (state) {
+          const { subtotal, itemCount, gifts } = calculateCartTotals(state.items);
+          state.subtotal = subtotal;
+          state.itemCount = itemCount;
+          state.gifts = gifts;
+        }
+      },
     }
   )
 );

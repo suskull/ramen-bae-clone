@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { MobileMenu } from "./mobile-menu"
 import { Navigation } from "./navigation"
+import { SignInModal } from "@/components/auth"
+import { useAuth } from "@/hooks/useAuth"
 
 interface HeaderProps {
   cartItemCount?: number
@@ -24,7 +26,9 @@ export function Header({
   isMobileMenuOpen = false 
 }: HeaderProps) {
   const [isScrolled, setIsScrolled] = React.useState(false)
+  const [isSignInOpen, setIsSignInOpen] = React.useState(false)
   const { scrollY } = useScroll()
+  const { user, isAuthenticated } = useAuth()
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 50)
@@ -79,6 +83,13 @@ export function Header({
                 size="icon"
                 className="hidden sm:flex"
                 aria-label="Account"
+                onClick={() => {
+                  if (isAuthenticated) {
+                    window.location.href = "/profile"
+                  } else {
+                    setIsSignInOpen(true)
+                  }
+                }}
               >
                 <User className="h-5 w-5" />
               </Button>
@@ -111,6 +122,20 @@ export function Header({
       <MobileMenu 
         isOpen={isMobileMenuOpen} 
         onClose={() => onMobileMenuToggle?.()} 
+      />
+
+      {/* Sign In Modal */}
+      <SignInModal
+        isOpen={isSignInOpen}
+        onClose={() => setIsSignInOpen(false)}
+        onSwitchToSignUp={() => {
+          setIsSignInOpen(false)
+          // TODO: Open sign up page/modal
+        }}
+        onForgotPassword={() => {
+          setIsSignInOpen(false)
+          // TODO: Open forgot password page/modal
+        }}
       />
     </>
   )
