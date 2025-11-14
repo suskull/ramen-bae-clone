@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Star } from 'lucide-react'
 import { Product, ProductImage, ReviewStats } from '@/lib/supabase/types'
 import { formatCurrency } from '@/lib/utils'
+import { getImageQuality, getImageSizes } from '@/lib/image-optimization'
 
 interface ProductCardProps {
   product: Product & {
@@ -55,7 +56,9 @@ export function ProductCard({ product }: ProductCardProps) {
                 className={`object-cover transition-opacity duration-300 ${
                   isHovered && hoverImage ? 'opacity-0' : 'opacity-100'
                 }`}
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                sizes={getImageSizes('PRODUCT_CARD')}
+                loading="lazy"
+                quality={getImageQuality('PRODUCT_CARD')}
               />
               {hoverImage && (
                 <Image
@@ -65,7 +68,9 @@ export function ProductCard({ product }: ProductCardProps) {
                   className={`object-cover transition-opacity duration-300 ${
                     isHovered ? 'opacity-100' : 'opacity-0'
                   }`}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  sizes={getImageSizes('PRODUCT_CARD')}
+                  loading="lazy"
+                  quality={getImageQuality('PRODUCT_CARD')}
                 />
               )}
             </>

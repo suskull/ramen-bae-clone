@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { ProductImage } from '@/lib/supabase/types'
+import { getImageQuality, getImageSizes } from '@/lib/image-optimization'
 
 interface ProductCarouselProps {
   images: ProductImage[]
@@ -83,8 +84,10 @@ export function ProductCarousel({
               alt={currentImage.alt || `${productName} - Image ${currentIndex + 1}`}
               fill
               className="object-cover pointer-events-none"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
+              sizes={getImageSizes('PRODUCT_DETAIL')}
               priority={currentIndex === 0}
+              quality={getImageQuality('PRODUCT_DETAIL')}
+              loading={currentIndex === 0 ? 'eager' : 'lazy'}
             />
           </div>
 
@@ -150,7 +153,9 @@ export function ProductCarousel({
                 alt={image.alt || `${productName} thumbnail ${index + 1}`}
                 fill
                 className="object-cover"
-                sizes="80px"
+                sizes={getImageSizes('THUMBNAIL')}
+                loading="lazy"
+                quality={getImageQuality('THUMBNAIL')}
               />
             </button>
           ))}

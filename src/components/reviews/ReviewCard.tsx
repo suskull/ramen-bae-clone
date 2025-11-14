@@ -6,6 +6,7 @@ import { Star, ThumbsUp, CheckCircle } from 'lucide-react'
 import { Review, ReviewMedia } from '@/lib/supabase/types'
 import { Button } from '@/components/ui/button'
 import { formatDistanceToNow } from 'date-fns'
+import { getImageQuality, getImageSizes } from '@/lib/image-optimization'
 
 interface ReviewCardProps {
   review: Review
@@ -98,7 +99,9 @@ export function ReviewCard({ review, onHelpful }: ReviewCardProps) {
                   alt={`Review media ${index + 1}`}
                   fill
                   className="object-cover"
-                  sizes="96px"
+                  sizes={getImageSizes('THUMBNAIL_SMALL')}
+                  loading="lazy"
+                  quality={getImageQuality('REVIEW_MEDIA')}
                 />
               ) : (
                 <div className="relative w-full h-full">
@@ -107,7 +110,9 @@ export function ReviewCard({ review, onHelpful }: ReviewCardProps) {
                     alt={`Review video ${index + 1}`}
                     fill
                     className="object-cover"
-                    sizes="96px"
+                    sizes={getImageSizes('THUMBNAIL_SMALL')}
+                    loading="lazy"
+                    quality={getImageQuality('REVIEW_MEDIA')}
                   />
                   {/* Video play icon overlay */}
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">

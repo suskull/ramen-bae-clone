@@ -7,6 +7,7 @@ import { Minus, Plus, X } from 'lucide-react'
 import { CartItem as CartItemType } from '@/stores/cart-store'
 import { useCart } from '@/hooks/useCart'
 import { formatCurrency } from '@/lib/utils'
+import { getImageQuality, getImageSizes } from '@/lib/image-optimization'
 
 interface CartItemProps {
   item: CartItemType
@@ -47,7 +48,9 @@ export function CartItem({ item }: CartItemProps) {
           alt={item.name}
           fill
           className="object-cover"
-          sizes="80px"
+          sizes={getImageSizes('CART_ITEM')}
+          loading="lazy"
+          quality={getImageQuality('THUMBNAIL')}
         />
       </Link>
 
