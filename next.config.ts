@@ -1,6 +1,37 @@
 import type { NextConfig } from "next";
 
+// Bundle analyzer configuration
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+  openAnalyzer: true,
+});
+
 const nextConfig: NextConfig = {
+  // Enable production optimizations
+  reactStrictMode: true,
+  
+  // Enable compiler optimizations
+  compiler: {
+    // Remove console logs in production
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'],
+    } : false,
+  },
+  
+  // Note: modularizeImports for lucide-react is handled by optimizePackageImports
+  // which provides better compatibility with Next.js 16
+  
+  // Enable experimental features for better performance
+  experimental: {
+    optimizePackageImports: [
+      'lucide-react',
+      'date-fns',
+      '@radix-ui/react-accordion',
+      '@radix-ui/react-dialog',
+      'framer-motion',
+    ],
+  },
+  
   images: {
     // Configure image formats with WebP as default
     formats: ['image/webp'],
@@ -51,4 +82,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

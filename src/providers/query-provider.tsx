@@ -5,8 +5,20 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import dynamic from 'next/dynamic'
 import { ReactNode } from 'react'
+
+
+// Only import devtools in development to reduce bundle size
+const ReactQueryDevtools = dynamic(
+  () =>
+    import('@tanstack/react-query-devtools').then((mod) => ({
+      default: mod.ReactQueryDevtools,
+    })),
+  {
+    ssr: false,
+  }
+)
 
 function makeQueryClient() {
   return new QueryClient({

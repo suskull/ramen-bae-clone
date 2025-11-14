@@ -5,7 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "build:webpack": "next build --webpack",
+    "start": "next start",
+    "analyze": "ANALYZE=true next build --webpack",
+    "analyze:server": "ANALYZE=true BUNDLE_ANALYZE=server next build --webpack",
+    "analyze:browser": "ANALYZE=true BUNDLE_ANALYZE=browser next build --webpack"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -28,6 +32,7 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^16.0.3",
     "@radix-ui/react-slot": "^1.2.3",
     "@tailwindcss/postcss": "^4.1.16",
     "@types/node": "^24.10.0",
@@ -35,6 +40,7 @@
     "@types/react-dom": "^19.2.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cross-env": "^10.1.0",
     "dotenv": "^17.2.3",
     "supabase": "^2.54.11",
     "tailwind-merge": "^3.3.1",

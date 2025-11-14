@@ -1,18 +1,27 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { ChevronLeft, Minus, Plus, ShoppingCart, Check, Leaf, Award, Shield, Sparkles, Info } from 'lucide-react'
 import { ProductCarousel } from './ProductCarousel'
 import { NutritionFactsModal } from './NutritionFactsModal'
-import { RelatedProducts } from './RelatedProducts'
-import { ReviewList, ReviewForm } from '@/components/reviews'
+import { ReviewList } from '@/components/reviews'
 import { Button } from '@/components/ui/button'
 import { Product, ProductImage, NutritionFacts } from '@/lib/supabase/types'
 import { cn, formatCurrency } from '@/lib/utils'
 import { useProductReviews, useProductReviewStats, useMarkReviewHelpful } from '@/hooks/useReviews'
 import { useCart } from '@/hooks/useCart'
 import { generateProductSchema, generateBreadcrumbSchema, renderStructuredData } from '@/lib/structured-data'
+
+// Lazy load components that are below the fold
+const RelatedProducts = dynamic(() => import('./RelatedProducts').then(mod => ({ default: mod.RelatedProducts })), {
+  loading: () => <div className="animate-pulse h-64 bg-gray-100 rounded-lg" />,
+})
+
+const ReviewForm = dynamic(() => import('@/components/reviews').then(mod => ({ default: mod.ReviewForm })), {
+  loading: () => <div className="animate-pulse h-96 bg-gray-100 rounded-lg" />,
+})
 
 interface ProductDetailLayoutProps {
   product: Product
