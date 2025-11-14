@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { AuthCartSync } from '../auth'
 import { Header } from './header'
+import { Footer } from './footer'
 
 interface ClientLayoutProps {
   children: React.ReactNode
@@ -48,9 +49,11 @@ export function ClientLayout({ children }: ClientLayoutProps) {
       />
       
       {/* Main content with padding for fixed header */}
-      <div className="pt-16 lg:pt-20">
+      <div className="pt-16 lg:pt-20 min-h-screen">
         {children}
       </div>
+
+      <Footer />
 
       <CartSidebar />
     </>

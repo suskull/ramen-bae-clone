@@ -121,13 +121,13 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 <Button
                   variant="outline"
                   className="w-full justify-start min-h-[48px] touch-manipulation"
-                  onClick={onClose}
-                  asChild
+                  onClick={() => {
+                    onClose()
+                    window.location.href = "/profile"
+                  }}
                 >
-                  <a href="/profile">
-                    <User className="h-5 w-5 mr-2" />
-                    Account
-                  </a>
+                  <User className="h-5 w-5 mr-2" />
+                  Account
                 </Button>
               </div>
             </motion.div>
