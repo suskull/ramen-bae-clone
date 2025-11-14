@@ -77,8 +77,6 @@ export async function GET(request: Request) {
       })
     )
 
-    console.log(productsWithStats, 'productsWithStats')
-    
     return NextResponse.json({ 
       products: productsWithStats,
       total: count,

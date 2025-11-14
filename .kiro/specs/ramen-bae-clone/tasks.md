@@ -215,18 +215,18 @@
     - Merge guest cart with user cart on login
     - _Requirements: 4.1, 9.2_
 
-- [ ] 11. Content pages
-  - [ ] 11.1 Create About Us page
+- [x] 11. Content pages
+  - [x] 11.1 Create About Us page
     - Write content about founder's story and brand mission
     - Add images and styling consistent with brand
     - _Requirements: 7.1_
   
-  - [ ] 11.2 Create FAQ page
+  - [x] 11.2 Create FAQ page
     - Implement accordion-style FAQ section
     - Add common questions and answers
     - _Requirements: 7.2, 7.3_
   
-  - [ ] 11.3 Create Contact page
+  - [x] 11.3 Create Contact page
     - Implement contact form with fields (name, email, inquiry type, message)
     - Add form validation
     - Create Supabase Edge Function to handle form submission

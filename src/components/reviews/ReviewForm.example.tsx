@@ -17,7 +17,6 @@ export function ReviewFormExample() {
   const productId = 'example-product-id'
   
   const handleReviewSuccess = () => {
-    console.log('Review submitted successfully!')
     setIsModalOpen(false)
     // Optionally refresh reviews list or show success message
   }

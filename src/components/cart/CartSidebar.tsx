@@ -23,8 +23,6 @@ export function CartSidebar() {
     itemCount 
   } = useCart()
 
-  console.log(items, 'items')
-
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && closeCart()}>
       <SheetContent 

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 interface IngredientProps {
   emoji: string;
@@ -10,10 +10,11 @@ interface IngredientProps {
   initialY: number;
   duration: number;
   delay: number;
+  repeatDelay: number;
   floatDirection: 'up' | 'diagonal-left' | 'diagonal-right';
 }
 
-const Ingredient = ({ emoji, size, initialX, initialY, duration, delay, floatDirection }: IngredientProps) => {
+const Ingredient = ({ emoji, size, initialX, initialY, duration, delay, repeatDelay, floatDirection }: IngredientProps) => {
   // Define different floating patterns
   const getFloatAnimation = () => {
     switch (floatDirection) {
@@ -61,7 +62,7 @@ const Ingredient = ({ emoji, size, initialX, initialY, duration, delay, floatDir
         duration,
         delay,
         repeat: Infinity,
-        repeatDelay: Math.random() * 4 + 3, // Random delay between 3-7 seconds
+        repeatDelay,
         ease: "easeOut",
       }}
     >
@@ -75,6 +76,8 @@ interface FloatingIngredientsProps {
 }
 
 const FloatingIngredients = ({ className = '' }: FloatingIngredientsProps) => {
+  const [isMounted, setIsMounted] = useState(false);
+
   // Ramen-related ingredient emojis
   const ingredients = [
     '🍜', // Ramen bowl
@@ -91,12 +94,19 @@ const FloatingIngredients = ({ className = '' }: FloatingIngredientsProps) => {
     '🌿', // Herbs
   ];
 
+  // Only run on client side
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   // Check for reduced motion preference
   const prefersReducedMotion = typeof window !== 'undefined' && 
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Generate random positions and animations for ingredients
+  // Generate random positions and animations for ingredients - only on client
   const floatingIngredients = useMemo(() => {
+    if (!isMounted) return [];
+    
     const directions: Array<'up' | 'diagonal-left' | 'diagonal-right'> = ['up', 'diagonal-left', 'diagonal-right'];
     
     return Array.from({ length: 15 }, (_, index) => {
@@ -109,21 +119,19 @@ const FloatingIngredients = ({ className = '' }: FloatingIngredientsProps) => {
         initialY: Math.random() * 70 + 20, // Y position between 20-90%
         duration: Math.random() * 3 + 8, // Duration between 8-11 seconds
         delay: Math.random() * 12, // Delay between 0-12 seconds
+        repeatDelay: Math.random() * 4 + 3, // Random delay between 3-7 seconds
         floatDirection: directions[Math.floor(Math.random() * directions.length)],
       };
     });
-  }, []);
+  }, [isMounted]);
 
-  
-
-  // Don't render animations if user prefers reduced motion
-  if (prefersReducedMotion) {
+  // Don't render until mounted or if user prefers reduced motion
+  if (!isMounted || prefersReducedMotion) {
     return null;
   }
 
   return (
     <div className={`absolute inset-0 overflow-hidden ${className}`}>
-      
       {floatingIngredients.map((ingredient) => (
         <Ingredient
           key={ingredient.id}
@@ -133,6 +141,7 @@ const FloatingIngredients = ({ className = '' }: FloatingIngredientsProps) => {
           initialY={ingredient.initialY}
           duration={ingredient.duration}
           delay={ingredient.delay}
+          repeatDelay={ingredient.repeatDelay}
           floatDirection={ingredient.floatDirection}
         />
       ))}

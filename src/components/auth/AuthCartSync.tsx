@@ -22,8 +22,6 @@ export function AuthCartSync() {
   useEffect(() => {
     if (loading) return
 
-    console.log(prevUserRef, 'prevUserRef')
-
     const prevUser = prevUserRef.current
     prevUserRef.current = user
 
