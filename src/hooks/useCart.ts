@@ -21,6 +21,7 @@ export function useCart() {
     toggleCart,
     syncToSupabase,
     loadFromSupabase,
+    clearCartOnLogout,
   } = useCartStore();
 
   // Helper to add product to cart
@@ -83,5 +84,6 @@ export function useCart() {
     // Supabase sync
     syncToSupabase,
     loadFromSupabase,
+    clearCartOnLogout,
   };
 }

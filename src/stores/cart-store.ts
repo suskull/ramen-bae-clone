@@ -25,6 +25,7 @@ interface CartState {
   isOpen: boolean;
   cartId: string | null;
   syncTimeoutId: NodeJS.Timeout | null;
+  lastMergedUserId: string | null; // Track last merged user to prevent re-merge
   
   // Computed values
   itemCount: number;
@@ -47,6 +48,7 @@ interface CartState {
   debouncedSync: () => void;
   loadFromSupabase: (userId: string) => Promise<void>;
   mergeGuestCart: (userId: string) => Promise<void>;
+  clearCartOnLogout: () => void;
 }
 
 // Gift thresholds configuration
@@ -77,6 +79,7 @@ export const useCartStore = create<CartState>()(
       isOpen: false,
       cartId: null,
       syncTimeoutId: null,
+      lastMergedUserId: null,
       itemCount: 0,
       subtotal: 0,
       gifts: GIFT_THRESHOLDS,
@@ -366,11 +369,20 @@ export const useCartStore = create<CartState>()(
         try {
           const supabase = createClient();
           const state = get();
+          
+          // ✅ Prevent re-merge if we already merged for this user
+          // This happens on page reload when Zustand rehydrates from localStorage
+          if (state.lastMergedUserId === userId) {
+            console.log('Already merged for this user, skipping re-merge');
+            return;
+          }
+
           const guestItems = state.items;
 
-          // If no guest items, just load user cart
+          // If no guest items, just load user cart and mark as merged
           if (guestItems.length === 0) {
             await get().loadFromSupabase(userId);
+            set({ lastMergedUserId: userId });
             return;
           }
 
@@ -453,11 +465,28 @@ export const useCartStore = create<CartState>()(
             .update({ updated_at: new Date().toISOString() })
             .eq('id', userCart.id);
 
-          // Load the merged cart
+          // ✅ Load the merged cart from database
+          // This replaces localStorage with DB data, effectively clearing the guest cart
+          // and preventing duplicate merges on subsequent logins
           await get().loadFromSupabase(userId);
+          
+          // ✅ Mark this user as merged to prevent re-merge on page reload
+          set({ lastMergedUserId: userId });
         } catch (error) {
           console.error('Error merging guest cart:', error);
         }
+      },
+
+      clearCartOnLogout: () => {
+        // Clear cart on logout to prevent stale data and ensure fresh start
+        set({
+          items: [],
+          cartId: null,
+          lastMergedUserId: null, // Reset merge tracking
+          subtotal: 0,
+          itemCount: 0,
+          gifts: GIFT_THRESHOLDS,
+        });
       },
     }),
     {
@@ -466,6 +495,7 @@ export const useCartStore = create<CartState>()(
       partialize: (state) => ({
         items: state.items,
         cartId: state.cartId,
+        lastMergedUserId: state.lastMergedUserId, // Persist merge tracking
       }),
       onRehydrateStorage: () => (state) => {
         // Recalculate computed values after rehydration

@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { usePathname } from 'next/navigation'
-import { Header } from './header'
 import { CartSidebar } from '@/components/cart/CartSidebar'
 import { useCart } from '@/hooks/useCart'
+import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { AuthCartSync } from '../auth'
+import { Header } from './header'
 
 interface ClientLayoutProps {
   children: React.ReactNode
@@ -37,7 +38,7 @@ export function ClientLayout({ children }: ClientLayoutProps) {
 
   return (
     <>
-      {/* <AuthCartSync /> */}
+      <AuthCartSync />
       
       <Header
         cartItemCount={itemCount}
