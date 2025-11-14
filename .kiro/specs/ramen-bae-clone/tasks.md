@@ -251,7 +251,7 @@
     - Implement lazy loading for below-the-fold images
     - _Requirements: 10.2, 10.4_
   
-  - [ ] 13.2 Add SEO metadata
+  - [x] 13.2 Add SEO metadata
     - Implement meta tags for all pages
     - Add structured data for products
     - Create sitemap.xml

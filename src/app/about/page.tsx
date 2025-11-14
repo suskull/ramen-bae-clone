@@ -1,10 +1,12 @@
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { Metadata } from "next";
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "About Us - Ramen Bae",
-  description: "Learn about the story behind Ramen Bae and our mission to enhance your ramen experience.",
-};
+export const metadata: Metadata = generateSEOMetadata({
+  title: "About Us - Our Story & Mission",
+  description: "Learn about the story behind Ramen Bae and our mission to make gourmet ramen accessible to all. Premium quality, small batch, whole ingredients since day one.",
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ChevronLeft, Minus, Plus, ShoppingCart, Check, Leaf, Award, Shield, Sparkles, Info } from 'lucide-react'
 import { ProductCarousel } from './ProductCarousel'
@@ -12,6 +12,7 @@ import { Product, ProductImage, NutritionFacts } from '@/lib/supabase/types'
 import { cn, formatCurrency } from '@/lib/utils'
 import { useProductReviews, useProductReviewStats, useMarkReviewHelpful } from '@/hooks/useReviews'
 import { useCart } from '@/hooks/useCart'
+import { generateProductSchema, generateBreadcrumbSchema, renderStructuredData } from '@/lib/structured-data'
 
 interface ProductDetailLayoutProps {
   product: Product
@@ -107,8 +108,27 @@ export function ProductDetailLayout({ product }: ProductDetailLayoutProps) {
     ratingDistribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }
   }
 
+  // Generate structured data
+  const productWithStats = {
+    ...product,
+    review_stats: reviewStats || defaultReviewStats,
+  }
+  const productSchema = generateProductSchema(productWithStats as any)
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: 'Home', url: '/' },
+    { name: 'Products', url: '/products' },
+    { name: product.name, url: `/products/${product.slug}` },
+  ])
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: renderStructuredData([productSchema, breadcrumbSchema]),
+        }}
+      />
+      <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
         <nav className="mb-6">
@@ -423,5 +443,6 @@ export function ProductDetailLayout({ product }: ProductDetailLayoutProps) {
         accentColor={product.accent_color}
       />
     </div>
+    </>
   )
 }

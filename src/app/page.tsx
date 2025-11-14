@@ -1,5 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { FloatingIngredients, SocialProof } from "@/components/animations";
+import { Metadata } from "next";
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = generateSEOMetadata({
+  title: "Home - Premium Dried Ramen Toppings",
+  description: "Enhance your noods with the first ever dried ramen toppings. Shop our collection of premium mixes, single toppings, bundles, and seasonings. Free shipping on orders over $40.",
+  path: "/",
+});
 
 export default function Home() {
   return (

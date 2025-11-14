@@ -4,11 +4,15 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Metadata } from "next";
+import { generateMetadata as generateSEOMetadata } from "@/lib/seo";
+import { generateFAQSchema, renderStructuredData } from "@/lib/structured-data";
 
-export const metadata = {
-  title: "FAQ - Ramen Bae",
-  description: "Frequently asked questions about Ramen Bae products, shipping, and more.",
-};
+export const metadata: Metadata = generateSEOMetadata({
+  title: "FAQ - Frequently Asked Questions",
+  description: "Find answers to common questions about Ramen Bae products, shipping, returns, and more. Learn about our premium dried ramen toppings and ordering process.",
+  path: "/faq",
+});
 
 const faqCategories = [
   {
@@ -119,8 +123,21 @@ const faqCategories = [
 ];
 
 export default function FAQPage() {
+  // Flatten all FAQs for structured data
+  const allFAQs = faqCategories.flatMap(category => 
+    category.questions.map(q => ({ question: q.question, answer: q.answer }))
+  );
+  const faqSchema = generateFAQSchema(allFAQs);
+
   return (
-    <main className="min-h-screen bg-linear-to-b from-white to-pink-50/30">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: renderStructuredData(faqSchema),
+        }}
+      />
+      <main className="min-h-screen bg-linear-to-b from-white to-pink-50/30">
       {/* Hero Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
@@ -180,5 +197,6 @@ export default function FAQPage() {
         </div>
       </section>
     </main>
+    </>
   );
 }
