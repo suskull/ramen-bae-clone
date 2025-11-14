@@ -48,7 +48,7 @@ export function Navigation({ className, onItemClick, isMobile = false }: Navigat
   }
 
   return (
-    <nav className={cn("flex", isMobile ? "flex-col space-y-4" : "items-center space-x-8", className)}>
+    <nav className={cn("flex", isMobile ? "flex-col space-y-2" : "items-center space-x-8", className)}>
       {navigationItems.map((item, index) => {
         const isActive = pathname === item.href || 
           (item.href === "/products" && pathname.startsWith("/products"))
@@ -67,9 +67,9 @@ export function Navigation({ className, onItemClick, isMobile = false }: Navigat
               href={item.href}
               onClick={onItemClick}
               className={cn(
-                "relative font-medium transition-colors duration-200",
+                "relative font-medium transition-colors duration-200 touch-manipulation",
                 isMobile 
-                  ? "text-lg py-2 block hover:text-primary" 
+                  ? "text-lg py-3 px-2 hover:text-primary active:text-primary/80 min-h-[48px] flex items-center rounded-md hover:bg-gray-50 active:bg-gray-100" 
                   : "text-sm hover:text-primary",
                 isActive 
                   ? "text-primary" 
@@ -77,6 +77,13 @@ export function Navigation({ className, onItemClick, isMobile = false }: Navigat
               )}
             >
               {item.label}
+              {isActive && isMobile && (
+                <motion.div
+                  className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-r-full"
+                  initial={false}
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
               {isActive && !isMobile && (
                 <motion.div
                   className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full"

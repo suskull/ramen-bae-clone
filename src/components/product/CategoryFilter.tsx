@@ -41,10 +41,10 @@ export function CategoryFilter({ categories, className = '' }: CategoryFilterPro
       {/* All Products Tab */}
       <button
         onClick={() => handleCategoryChange('all')}
-        className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+        className={`px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200 touch-manipulation min-h-[44px] ${
           activeCategory === 'all'
             ? 'bg-primary text-white shadow-md'
-            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300'
         }`}
       >
         All Products
@@ -55,16 +55,16 @@ export function CategoryFilter({ categories, className = '' }: CategoryFilterPro
         <button
           key={category.id}
           onClick={() => handleCategoryChange(category.slug)}
-          className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
+          className={`px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-2 touch-manipulation min-h-[44px] ${
             activeCategory === category.slug
               ? 'bg-primary text-white shadow-md'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300'
           }`}
         >
           {category.icon && (
             <span className="text-base">{category.icon}</span>
           )}
-          {category.name}
+          <span className="whitespace-nowrap">{category.name}</span>
         </button>
       ))}
     </div>

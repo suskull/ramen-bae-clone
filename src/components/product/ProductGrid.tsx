@@ -45,7 +45,7 @@ export function ProductGrid({ products, isLoading = false, className = '' }: Pro
   // Show loading skeletons
   if (isLoading) {
     return (
-      <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 ${className}`}>
+      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 ${className}`}>
         {[...Array(8)].map((_, index) => (
           <ProductCardSkeleton key={index} />
         ))}
@@ -56,7 +56,7 @@ export function ProductGrid({ products, isLoading = false, className = '' }: Pro
   // Show empty state
   if (!products || products.length === 0) {
     return (
-      <div className={`flex flex-col items-center justify-center py-12 ${className}`}>
+      <div className={`flex flex-col items-center justify-center py-12 px-4 ${className}`}>
         <div className="text-center">
           <div className="w-24 h-24 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
             <svg 
@@ -86,7 +86,7 @@ export function ProductGrid({ products, isLoading = false, className = '' }: Pro
 
   // Show products grid
   return (
-    <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 ${className}`}>
+    <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 ${className}`}>
       {products.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}

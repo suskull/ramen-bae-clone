@@ -53,17 +53,17 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     }
   }
 
-  const contentVariants = {
-    hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1,
-      transition: { 
-        delay: 0.2,
-        duration: 0.3,
-        staggerChildren: 0.1
-      }
-    }
-  }
+  // const contentVariants = {
+  //   hidden: { opacity: 0 },
+  //   visible: { 
+  //     opacity: 1,
+  //     transition: { 
+  //       delay: 0.2,
+  //       duration: 0.3,
+  //       staggerChildren: 0.1
+  //     }
+  //   }
+  // }
 
   return (
     <AnimatePresence>
@@ -85,12 +85,12 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-background border-r border-border z-50 lg:hidden"
+            className="fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-background border-r border-border z-50 lg:hidden overflow-y-auto overscroll-contain"
           >
             <motion.div 
-              variants={contentVariants}
-              initial="hidden"
-              animate="visible"
+              // variants={contentVariants}
+              // initial="hidden"
+              // animate="visible"
               className="flex flex-col h-full"
             >
               {/* Header */}
@@ -120,11 +120,14 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               <div className="p-6 border-t border-border">
                 <Button
                   variant="outline"
-                  className="w-full justify-start"
+                  className="w-full justify-start min-h-[48px] touch-manipulation"
                   onClick={onClose}
+                  asChild
                 >
-                  <User className="h-4 w-4 mr-2" />
-                  Account
+                  <a href="/profile">
+                    <User className="h-5 w-5 mr-2" />
+                    Account
+                  </a>
                 </Button>
               </div>
             </motion.div>

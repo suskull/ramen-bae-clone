@@ -48,12 +48,12 @@ export function Header({
         transition={{ duration: 0.3 }}
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 lg:h-20">
+          <div className="flex items-center justify-between h-16 sm:h-18 lg:h-20">
             {/* Mobile menu button */}
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden"
+              className="lg:hidden -ml-2"
               onClick={onMobileMenuToggle}
               aria-label="Toggle mobile menu"
             >
@@ -63,9 +63,9 @@ export function Header({
             {/* Logo */}
             <Link 
               href="/" 
-              className="flex items-center space-x-2 shrink-0"
+              className="flex items-center space-x-2 shrink-0 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0"
             >
-              <div className="text-2xl font-bold text-primary">
+              <div className="text-xl sm:text-2xl font-bold text-primary">
                 Ramen Bae
               </div>
             </Link>
@@ -76,7 +76,7 @@ export function Header({
             </div>
 
             {/* Right side actions */}
-            <div className="flex items-center space-x-2 sm:space-x-4">
+            <div className="flex items-center space-x-1 sm:space-x-2">
               {/* Account button */}
               <Button
                 variant="ghost"
@@ -99,7 +99,7 @@ export function Header({
                 variant="ghost"
                 size="icon"
                 onClick={onCartClick}
-                className="relative"
+                className="relative -mr-2"
                 aria-label={`Shopping cart with ${cartItemCount} items`}
               >
                 <ShoppingCart className="h-5 w-5" />
@@ -107,7 +107,7 @@ export function Header({
                   <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium"
+                    className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium min-w-[20px]"
                   >
                     {cartItemCount > 99 ? "99+" : cartItemCount}
                   </motion.span>

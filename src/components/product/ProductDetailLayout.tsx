@@ -122,7 +122,7 @@ export function ProductDetailLayout({ product }: ProductDetailLayoutProps) {
         </nav>
 
         {/* Product Detail Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
           {/* Left Column - Product Images */}
           <div>
             <ProductCarousel 
@@ -135,21 +135,21 @@ export function ProductDetailLayout({ product }: ProductDetailLayoutProps) {
           {/* Right Column - Product Info */}
           <div>
             {/* Product Title */}
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
               {product.name}
             </h1>
 
             {/* Price */}
             <div className="mb-6">
-              <div className="flex items-baseline gap-3 mb-2">
+              <div className="flex items-baseline gap-2 sm:gap-3 mb-2">
                 <span 
-                  className="text-4xl font-bold"
+                  className="text-3xl sm:text-4xl font-bold"
                   style={{ color: product.accent_color }}
                 >
                   {formattedPrice}
                 </span>
                 {formattedComparePrice && (
-                  <span className="text-xl text-gray-500 line-through">
+                  <span className="text-lg sm:text-xl text-gray-500 line-through">
                     {formattedComparePrice}
                   </span>
                 )}
@@ -174,7 +174,7 @@ export function ProductDetailLayout({ product }: ProductDetailLayoutProps) {
                 <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide mb-3">
                   Product Features
                 </h3>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                   {product.features.map((feature, index) => {
                     const Icon = featureIcons[feature as keyof typeof featureIcons] || Check
                     return (
@@ -232,15 +232,15 @@ export function ProductDetailLayout({ product }: ProductDetailLayoutProps) {
               <label className="block text-sm font-semibold text-gray-900 uppercase tracking-wide mb-3">
                 Quantity
               </label>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
                 <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden bg-white">
                   <button
                     onClick={() => handleQuantityChange(-1)}
                     disabled={quantity <= 1 || isSoldOut}
-                    className="px-4 py-3 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="px-4 py-3 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors touch-manipulation min-h-[44px]"
                     aria-label="Decrease quantity"
                   >
-                    <Minus className="w-4 h-4" />
+                    <Minus className="w-5 h-5" />
                   </button>
                   <span className="px-6 py-3 font-semibold text-gray-900 min-w-[60px] text-center">
                     {quantity}
@@ -248,10 +248,10 @@ export function ProductDetailLayout({ product }: ProductDetailLayoutProps) {
                   <button
                     onClick={() => handleQuantityChange(1)}
                     disabled={quantity >= product.inventory || isSoldOut}
-                    className="px-4 py-3 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="px-4 py-3 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors touch-manipulation min-h-[44px]"
                     aria-label="Increase quantity"
                   >
-                    <Plus className="w-4 h-4" />
+                    <Plus className="w-5 h-5" />
                   </button>
                 </div>
                 <span className="text-sm text-gray-600">
@@ -266,7 +266,7 @@ export function ProductDetailLayout({ product }: ProductDetailLayoutProps) {
                 onClick={handleAddToCart}
                 disabled={isSoldOut || isAddingToCart}
                 className={cn(
-                  "w-full h-14 text-lg font-semibold transition-all",
+                  "w-full h-14 sm:h-16 text-base sm:text-lg font-semibold transition-all touch-manipulation",
                   addedToCart && "bg-green-600 hover:bg-green-600"
                 )}
                 style={
@@ -290,7 +290,9 @@ export function ProductDetailLayout({ product }: ProductDetailLayoutProps) {
                 ) : (
                   <>
                     <ShoppingCart className="w-5 h-5 mr-2" />
-                    Add to Cart - {formattedTotalPrice}
+                    <span className="hidden sm:inline">Add to Cart - </span>
+                    <span className="sm:hidden">Add - </span>
+                    {formattedTotalPrice}
                   </>
                 )}
               </Button>

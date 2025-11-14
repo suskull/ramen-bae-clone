@@ -232,14 +232,14 @@
     - Create Supabase Edge Function to handle form submission
     - _Requirements: 7.4_
 
-- [ ] 12. Mobile responsiveness
-  - [ ] 12.1 Optimize layouts for mobile
+- [x] 12. Mobile responsiveness
+  - [x] 12.1 Optimize layouts for mobile
     - Ensure all pages use responsive layouts
     - Test single-column grid for products on mobile
     - Verify touch-friendly button sizes
     - _Requirements: 6.1, 6.3, 6.5_
   
-  - [ ] 12.2 Implement mobile navigation
+  - [x] 12.2 Implement mobile navigation
     - Ensure MobileMenu slide-out drawer works smoothly
     - Test cart full-screen overlay on mobile
     - _Requirements: 6.2, 6.4_

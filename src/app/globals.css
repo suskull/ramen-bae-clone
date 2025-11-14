@@ -50,6 +50,35 @@
         background-color: var(--color-background);
         color: var(--color-foreground);
         font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Improve touch interactions on mobile */
+    @media (hover: none) and (pointer: coarse) {
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        button, a, [role="button"] {
+            cursor: pointer;
+        }
+    }
+
+    /* Prevent text selection on interactive elements */
+    button, [role="button"] {
+        -webkit-user-select: none;
+        user-select: none;
+    }
+
+    /* Smooth scrolling for better UX */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* Prevent horizontal scroll on mobile */
+    body {
+        overflow-x: hidden;
     }
 }
 
@@ -62,11 +91,52 @@
         animation: accordion-up 0.2s ease-out;
     }
     
+    .line-clamp-1 {
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
     .line-clamp-2 {
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
+    }
+
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* Touch-friendly utilities */
+    .touch-manipulation {
+        touch-action: manipulation;
+    }
+
+    /* Prevent overscroll bounce on mobile */
+    .overscroll-contain {
+        overscroll-behavior: contain;
+    }
+
+    /* Safe area insets for notched devices */
+    .safe-top {
+        padding-top: env(safe-area-inset-top);
+    }
+
+    .safe-bottom {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .safe-left {
+        padding-left: env(safe-area-inset-left);
+    }
+
+    .safe-right {
+        padding-right: env(safe-area-inset-right);
     }
 }
 
