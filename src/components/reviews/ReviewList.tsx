@@ -5,6 +5,7 @@ import { Star } from 'lucide-react'
 import { Review, ReviewStats } from '@/lib/supabase/types'
 import { ReviewCard } from './ReviewCard'
 import { Button } from '@/components/ui/button'
+import { ReviewCardSkeleton } from '@/components/ui'
 
 interface ReviewListProps {
   reviews: Review[]
@@ -120,7 +121,13 @@ export function ReviewList({
           Reviews ({reviewStats.totalReviews})
         </h4>
         
-        {reviews.length === 0 ? (
+        {isLoading ? (
+          <div className="space-y-4">
+            {[...Array(3)].map((_, i) => (
+              <ReviewCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : reviews.length === 0 ? (
           <div className="text-center py-12 bg-gray-50 rounded-lg">
             <p className="text-gray-600 mb-4">No reviews yet</p>
             <p className="text-sm text-gray-500">

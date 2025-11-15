@@ -8,8 +8,14 @@ import { CategoryFilter } from '@/components/product/CategoryFilter'
 import { Pagination } from '@/components/ui/pagination'
 import { useProducts, useCategories } from '@/hooks/useProducts'
 import { useInfiniteProducts } from '@/hooks/useInfiniteProducts'
+import { ErrorState, NetworkError } from '@/components/error'
+import { PageLoader } from '@/components/ui'
 
 const PRODUCTS_PER_PAGE = 12
+
+const ThrowError = () => {
+  throw new Error('Test error')
+}
 
 function ProductsContent() {
   const router = useRouter()
@@ -25,6 +31,8 @@ function ProductsContent() {
     const page = pageParam ? parseInt(pageParam, 10) : 1
     setCurrentPage(page > 0 ? page : 1)
   }, [pageParam])
+
+
 
   // Update view mode from URL
   useEffect(() => {
@@ -181,20 +189,12 @@ function ProductsContent() {
 
         {/* Error State */}
         {error && (
-          <div className="text-center py-12">
-            <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
-              <h3 className="text-lg font-semibold text-red-800 mb-2">
-                Oops! Something went wrong
-              </h3>
-              <p className="text-red-600">{error instanceof Error ? error.message : 'An error occurred'}</p>
-              <button
-                onClick={() => refetch()}
-                className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
-              >
-                Try Again
-              </button>
-            </div>
-          </div>
+          <ErrorState
+            title="Unable to Load Products"
+            message={error instanceof Error ? error.message : 'Failed to load products. Please try again.'}
+            onRetry={() => refetch()}
+            icon="error"
+          />
         )}
 
         {/* Products Grid - Infinite Scroll Mode */}
@@ -245,14 +245,7 @@ function ProductsContent() {
 
 export default function ProductsPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading products...</p>
-        </div>
-      </div>
-    }>
+    <Suspense fallback={<PageLoader text="Loading products..." />}>
       <ProductsContent />
     </Suspense>
   )

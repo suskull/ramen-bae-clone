@@ -3,6 +3,7 @@
 import { useInView } from 'react-intersection-observer'
 import { ProductCard } from './ProductCard'
 import { Product, ReviewStats } from '@/lib/supabase/types'
+import { ProductCardSkeleton } from '@/components/ui'
 
 interface InfiniteProductGridProps {
   pages: { products: (Product & { reviewStats?: ReviewStats })[] }[]
@@ -11,30 +12,6 @@ interface InfiniteProductGridProps {
   hasNextPage: boolean
   fetchNextPage: () => void
   className?: string
-}
-
-// Skeleton component for loading state
-function ProductCardSkeleton() {
-  return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-sm animate-pulse">
-      <div className="aspect-square bg-gray-200" />
-      <div className="p-4 space-y-3">
-        <div className="space-y-2">
-          <div className="h-4 bg-gray-200 rounded w-3/4" />
-          <div className="h-4 bg-gray-200 rounded w-1/2" />
-        </div>
-        <div className="flex items-center gap-1">
-          <div className="flex gap-1">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="w-4 h-4 bg-gray-200 rounded" />
-            ))}
-          </div>
-          <div className="h-3 bg-gray-200 rounded w-8 ml-1" />
-        </div>
-        <div className="h-5 bg-gray-200 rounded w-20" />
-      </div>
-    </div>
-  )
 }
 
 export function InfiniteProductGrid({

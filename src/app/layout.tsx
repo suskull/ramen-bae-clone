@@ -5,6 +5,7 @@ import { QueryProvider } from "@/providers/query-provider";
 import { ClientLayout } from "@/components/layout/ClientLayout";
 import { generateMetadata as generateSEOMetadata } from "@/lib/seo";
 import { generateOrganizationSchema, generateWebsiteSchema, renderStructuredData } from "@/lib/structured-data";
+import { ErrorBoundary } from "@/components/error";
 
 const poppins = Poppins({
   weight: ["300", "400", "500", "600", "700"],
@@ -37,11 +38,13 @@ export default function RootLayout({
         />
       </head>
       <body className={`${poppins.variable} antialiased`}>
-        <QueryProvider>
-          <ClientLayout>
-            {children}
-          </ClientLayout>
-        </QueryProvider>
+        <ErrorBoundary>
+          <QueryProvider>
+            <ClientLayout>
+              {children}
+            </ClientLayout>
+          </QueryProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );
