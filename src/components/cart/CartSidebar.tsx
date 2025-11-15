@@ -82,7 +82,7 @@ export function CartSidebar() {
 
             {/* Checkout Button */}
             <Button
-              className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-5 sm:py-6 text-base sm:text-lg rounded-lg transition-colors touch-manipulation"
+              className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-5 sm:py-6 text-base sm:text-lg rounded-lg transition-colors duration-200 ease-out touch-manipulation"
               onClick={() => {
                 // TODO: Navigate to checkout
                 console.log('Navigate to checkout')
@@ -94,7 +94,7 @@ export function CartSidebar() {
             {/* Continue Shopping Link */}
             <button
               onClick={closeCart}
-              className="w-full mt-3 py-2 text-sm text-gray-600 hover:text-gray-900 active:text-black transition-colors touch-manipulation"
+              className="w-full mt-3 py-2 text-sm text-gray-600 hover:text-gray-900 active:text-black transition-colors duration-200 ease-out touch-manipulation"
             >
               Continue Shopping
             </button>
@@ -125,7 +125,7 @@ function EmptyCart({ onClose }: { onClose: () => void }) {
       {/* Shop Now Button */}
       <Button
         onClick={onClose}
-        className="bg-primary hover:bg-primary-dark text-white font-semibold px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg rounded-lg transition-colors touch-manipulation"
+        className="bg-primary hover:bg-primary-dark text-white font-semibold px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg rounded-lg transition-colors duration-200 ease-out touch-manipulation"
       >
         Start Shopping
       </Button>
@@ -175,7 +175,7 @@ function RecommendationCard({
   return (
     <a
       href={`/products/${slug}`}
-      className="flex items-center gap-3 sm:gap-4 p-2.5 sm:p-3 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors group touch-manipulation min-h-[60px]"
+      className="flex items-center gap-3 sm:gap-4 p-2.5 sm:p-3 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors duration-200 ease-out group touch-manipulation min-h-[60px]"
     >
       <div className="relative w-14 sm:w-16 h-14 sm:h-16 rounded-md overflow-hidden bg-gray-100 shrink-0">
         <img
@@ -185,7 +185,7 @@ function RecommendationCard({
         />
       </div>
       <div className="flex-1 min-w-0">
-        <h5 className="text-sm sm:text-base font-medium text-gray-900 group-hover:text-primary transition-colors line-clamp-1">
+        <h5 className="text-sm sm:text-base font-medium text-gray-900 group-hover:text-primary transition-colors duration-200 ease-out line-clamp-1">
           {name}
         </h5>
         <p className="text-sm font-semibold text-primary">

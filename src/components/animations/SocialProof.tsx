@@ -50,7 +50,7 @@ export default function SocialProof() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '0px 0px -100px 0px' }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
           className="text-center mb-12"
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
@@ -69,7 +69,7 @@ export default function SocialProof() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '0px 0px -100px 0px' }}
               transition={{ 
-                duration: 0.6, 
+                duration: 0.3, 
                 delay: index * 0.1,
                 ease: 'easeOut'
               }}
@@ -79,7 +79,7 @@ export default function SocialProof() {
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                  className="bg-linear-to-br from-pink-50 to-pink-100/50 rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-md transition-shadow duration-300"
+                  className="bg-linear-to-br from-pink-50 to-pink-100/50 rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-md transition-shadow duration-200 ease-out"
                 >
                   <div className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary mb-2">
                     <AnimatedCounter value={stat.value} suffix={stat.suffix} />
@@ -95,7 +95,7 @@ export default function SocialProof() {
                   whileInView={{ scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ 
-                    duration: 0.4, 
+                    duration: 0.3, 
                     delay: index * 0.1 + 0.3,
                     type: 'spring',
                     stiffness: 200
@@ -112,7 +112,7 @@ export default function SocialProof() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: '0px 0px -100px 0px' }}
-          transition={{ duration: 0.6, delay: 0.8 }}
+          transition={{ duration: 0.3, delay: 0.8, ease: "easeOut" }}
           className="text-center mt-12 lg:mt-16"
         >
           <p className="text-gray-500 text-sm sm:text-base">

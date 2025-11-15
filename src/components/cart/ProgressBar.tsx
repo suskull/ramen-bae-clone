@@ -30,10 +30,10 @@ export function ProgressBar({ subtotal, gifts }: ProgressBarProps) {
 
   if (freeFishCakes.unlocked) {
     message = '🎉 Free Shipping & Free Fish Cakes Unlocked!';
-    messageColor = 'text-[#96da2f] font-semibold';
+    messageColor = 'text-accent font-semibold';
   } else if (freeShipping.unlocked) {
     message = `🚚 Free Shipping Unlocked! Add $${amountToFishCakes.toFixed(2)} more for Free Fish Cakes`;
-    messageColor = 'text-[#96da2f] font-semibold';
+    messageColor = 'text-accent font-semibold';
   } else {
     message = `Add $${amountToShipping.toFixed(2)} more for Free Shipping`;
     messageColor = 'text-gray-600';
@@ -45,7 +45,7 @@ export function ProgressBar({ subtotal, gifts }: ProgressBarProps) {
       <div className="relative h-3 w-full overflow-hidden rounded-full bg-gray-200">
         {/* Progress Fill */}
         <div
-          className="h-full bg-gradient-to-r from-[#fe90b8] to-[#F999BF] transition-all duration-500 ease-out"
+          className="h-full bg-linear-to-r from-primary to-primary-light transition-all duration-300 ease-out"
           style={{ width: `${progressPercentage}%` }}
         />
         
@@ -61,7 +61,7 @@ export function ProgressBar({ subtotal, gifts }: ProgressBarProps) {
       </div>
 
       {/* Message */}
-      <p className={`text-sm text-center ${messageColor}`}>
+      <p className={`text-sm text-center transition-colors duration-200 ${messageColor}`}>
         {message}
       </p>
 
@@ -69,12 +69,12 @@ export function ProgressBar({ subtotal, gifts }: ProgressBarProps) {
       {(freeShipping.unlocked || freeFishCakes.unlocked) && (
         <div className="flex flex-wrap gap-2 justify-center">
           {freeShipping.unlocked && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-[#96da2f]/10 px-3 py-1 text-xs font-medium text-[#96da2f]">
+            <span className="inline-flex items-center gap-1 rounded-full bg-accent/10 px-3 py-1 text-xs font-medium text-accent animate-in fade-in duration-200">
               ✓ Free Shipping
             </span>
           )}
           {freeFishCakes.unlocked && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-[#96da2f]/10 px-3 py-1 text-xs font-medium text-[#96da2f]">
+            <span className="inline-flex items-center gap-1 rounded-full bg-accent/10 px-3 py-1 text-xs font-medium text-accent animate-in fade-in duration-200">
               ✓ Free Fish Cakes
             </span>
           )}

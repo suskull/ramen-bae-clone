@@ -74,7 +74,7 @@ export function ProductCarousel({
         >
           <div
             ref={imageWrapperRef}
-            className="relative w-full h-full transition-transform duration-200 group-hover:scale-150"
+            className="relative w-full h-full transition-transform duration-300 ease-out group-hover:scale-150"
             style={{
               transformOrigin: 'var(--zoom-x, 50%) var(--zoom-y, 50%)',
             }}
@@ -92,7 +92,7 @@ export function ProductCarousel({
           </div>
 
           {/* Zoom Indicator */}
-          <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-out pointer-events-none">
             <ZoomIn className="w-5 h-5 text-gray-700" />
           </div>
 
@@ -101,14 +101,14 @@ export function ProductCarousel({
             <>
               <button
                 onClick={goToPrevious}
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg hover:bg-white transition-all opacity-0 group-hover:opacity-100"
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg hover:bg-white transition-all duration-200 ease-out opacity-0 group-hover:opacity-100"
                 aria-label="Previous image"
               >
                 <ChevronLeft className="w-5 h-5 text-gray-700" />
               </button>
               <button
                 onClick={goToNext}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg hover:bg-white transition-all opacity-0 group-hover:opacity-100"
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg hover:bg-white transition-all duration-200 ease-out opacity-0 group-hover:opacity-100"
                 aria-label="Next image"
               >
                 <ChevronRight className="w-5 h-5 text-gray-700" />
@@ -133,7 +133,7 @@ export function ProductCarousel({
               key={index}
               onClick={() => goToImage(index)}
               className={cn(
-                "relative shrink-0 w-20 h-20 rounded-md overflow-hidden border-2 transition-all",
+                "relative shrink-0 w-20 h-20 rounded-md overflow-hidden border-2 transition-all duration-200 ease-out",
                 currentIndex === index
                   ? "border-opacity-100 ring-2 ring-offset-2"
                   : "border-gray-200 hover:border-gray-300 opacity-60 hover:opacity-100"

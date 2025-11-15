@@ -41,7 +41,7 @@ export function CartItem({ item }: CartItemProps) {
       {/* Product Image */}
       <Link 
         href={`/products/${item.slug}`}
-        className="relative w-20 h-20 shrink-0 rounded-md overflow-hidden bg-gray-50 hover:opacity-80 transition-opacity"
+        className="relative w-20 h-20 shrink-0 rounded-md overflow-hidden bg-gray-50 hover:opacity-80 transition-opacity duration-200 ease-out"
       >
         <Image
           src={item.image}
@@ -61,7 +61,7 @@ export function CartItem({ item }: CartItemProps) {
           href={`/products/${item.slug}`}
           className="block"
         >
-          <h3 className="font-semibold text-sm text-gray-900 hover:text-primary transition-colors line-clamp-2">
+          <h3 className="font-semibold text-sm text-gray-900 hover:text-primary transition-colors duration-200 ease-out line-clamp-2">
             {item.name}
           </h3>
         </Link>
@@ -77,7 +77,7 @@ export function CartItem({ item }: CartItemProps) {
             <button
               onClick={handleDecrement}
               disabled={item.quantity <= 1 || isUpdating}
-              className="p-1.5 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="p-1.5 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200 ease-out"
               aria-label="Decrease quantity"
             >
               <Minus className="w-4 h-4 text-gray-600" />
@@ -90,7 +90,7 @@ export function CartItem({ item }: CartItemProps) {
             <button
               onClick={handleIncrement}
               disabled={isUpdating}
-              className="p-1.5 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="p-1.5 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200 ease-out"
               aria-label="Increase quantity"
             >
               <Plus className="w-4 h-4 text-gray-600" />
@@ -107,7 +107,7 @@ export function CartItem({ item }: CartItemProps) {
       {/* Remove Button */}
       <button
         onClick={handleRemove}
-        className="shrink-0 p-1 hover:bg-gray-100 rounded-md transition-colors self-start"
+        className="shrink-0 p-1 hover:bg-gray-100 rounded-md transition-colors duration-200 ease-out self-start"
         aria-label="Remove item"
       >
         <X className="w-5 h-5 text-gray-500 hover:text-gray-700" />

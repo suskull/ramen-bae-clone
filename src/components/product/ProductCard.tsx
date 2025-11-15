@@ -41,7 +41,7 @@ export function ProductCard({ product }: ProductCardProps) {
       className="group block"
     >
       <div 
-        className="relative bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-[1.02]"
+        className="relative bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 ease-out transform hover:scale-[1.02]"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -53,7 +53,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 src={mainImage.url}
                 alt={mainImage.alt || product.name}
                 fill
-                className={`object-cover transition-opacity duration-300 ${
+                className={`object-cover transition-opacity duration-200 ease-out ${
                   isHovered && hoverImage ? 'opacity-0' : 'opacity-100'
                 }`}
                 sizes={getImageSizes('PRODUCT_CARD')}
@@ -65,7 +65,7 @@ export function ProductCard({ product }: ProductCardProps) {
                   src={hoverImage.url}
                   alt={hoverImage.alt || `${product.name} alternate view`}
                   fill
-                  className={`object-cover transition-opacity duration-300 ${
+                  className={`object-cover transition-opacity duration-200 ease-out ${
                     isHovered ? 'opacity-100' : 'opacity-0'
                   }`}
                   sizes={getImageSizes('PRODUCT_CARD')}
@@ -94,7 +94,7 @@ export function ProductCard({ product }: ProductCardProps) {
           
           {/* Accent Color Border (subtle) */}
           <div 
-            className="absolute inset-0 border-2 border-transparent group-hover:border-opacity-30 transition-all duration-300"
+            className="absolute inset-0 border-2 border-transparent group-hover:border-opacity-30 transition-all duration-200 ease-out"
             style={{ borderColor: product.accent_color }}
           />
         </div>
@@ -102,7 +102,7 @@ export function ProductCard({ product }: ProductCardProps) {
         {/* Product Info */}
         <div className="p-4">
           {/* Product Name */}
-          <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-gray-700 transition-colors">
+          <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-gray-700 transition-colors duration-200 ease-out">
             {product.name}
           </h3>
           
