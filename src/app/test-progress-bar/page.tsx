@@ -106,7 +106,7 @@ export default function TestProgressBarPage() {
               <span
                 className={
                   subtotal >= 40
-                    ? 'font-semibold text-[#96da2f]'
+                    ? 'font-semibold text-accent'
                     : 'text-gray-400'
                 }
               >
@@ -118,7 +118,7 @@ export default function TestProgressBarPage() {
               <span
                 className={
                   subtotal >= 60
-                    ? 'font-semibold text-[#96da2f]'
+                    ? 'font-semibold text-accent'
                     : 'text-gray-400'
                 }
               >
