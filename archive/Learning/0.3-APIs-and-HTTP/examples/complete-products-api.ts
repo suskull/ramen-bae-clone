@@ -76,7 +76,7 @@ const queryParamsSchema = z.object({
 function parseQueryParams(searchParams: URLSearchParams) {
   const params = Object.fromEntries(searchParams.entries());
   const validated = queryParamsSchema.parse(params);
-  
+
   return {
     pagination: {
       page: parseInt(validated.page),
@@ -97,7 +97,7 @@ function parseQueryParams(searchParams: URLSearchParams) {
 }
 
 function buildProductQuery(
-  supabase: ReturnType<typeof createClient>,
+  supabase: Awaited<ReturnType<typeof createClient>>,
   filters: FilterParams,
   sort: { field: string; order: string }
 ) {
@@ -111,24 +111,24 @@ function buildProductQuery(
         slug
       )
     `, { count: 'exact' });
-  
+
   // Apply filters
   if (filters.category) {
     query = query.eq('category_id', filters.category);
   }
-  
+
   if (filters.minPrice !== undefined) {
     query = query.gte('price', filters.minPrice);
   }
-  
+
   if (filters.maxPrice !== undefined) {
     query = query.lte('price', filters.maxPrice);
   }
-  
+
   if (filters.search) {
     query = query.or(`name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
   }
-  
+
   if (filters.inStock !== undefined) {
     if (filters.inStock) {
       query = query.gt('inventory', 0);
@@ -136,10 +136,10 @@ function buildProductQuery(
       query = query.eq('inventory', 0);
     }
   }
-  
+
   // Apply sorting
   query = query.order(sort.field, { ascending: sort.order === 'asc' });
-  
+
   return query;
 }
 
@@ -156,19 +156,19 @@ class ApiError extends Error {
 
 function handleError(error: unknown) {
   console.error('API Error:', error);
-  
+
   if (error instanceof ApiError) {
     return NextResponse.json(
       { error: error.message, details: error.details },
       { status: error.statusCode }
     );
   }
-  
+
   if (error instanceof z.ZodError) {
     return NextResponse.json(
-      { 
-        error: 'Validation failed', 
-        details: error.errors.map(e => ({
+      {
+        error: 'Validation failed',
+        details: error.issues.map((e: z.ZodIssue) => ({
           field: e.path.join('.'),
           message: e.message,
         }))
@@ -176,7 +176,7 @@ function handleError(error: unknown) {
       { status: 400 }
     );
   }
-  
+
   return NextResponse.json(
     { error: 'Internal server error' },
     { status: 500 }
@@ -189,29 +189,29 @@ function handleError(error: unknown) {
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createClient();
-    
+    const supabase = await createClient();
+
     // Parse and validate query parameters
     const { pagination, filters, sort } = parseQueryParams(
       request.nextUrl.searchParams
     );
-    
+
     // Calculate offset for pagination
     const offset = (pagination.page - 1) * pagination.limit;
-    
+
     // Build and execute query
     let query = buildProductQuery(supabase, filters, sort);
     query = query.range(offset, offset + pagination.limit - 1);
-    
+
     const { data: products, error, count } = await query;
-    
+
     if (error) {
       throw new ApiError(500, 'Failed to fetch products', error);
     }
-    
+
     // Calculate pagination metadata
     const totalPages = Math.ceil((count || 0) / pagination.limit);
-    
+
     return NextResponse.json({
       products,
       pagination: {
@@ -225,7 +225,7 @@ export async function GET(request: NextRequest) {
       filters,
       sort,
     });
-    
+
   } catch (error) {
     return handleError(error);
   }
@@ -237,23 +237,23 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createClient();
-    
+    const supabase = await createClient();
+
     // Parse and validate request body
     const body = await request.json();
     const validatedData = productSchema.parse(body);
-    
+
     // Check if category exists
     const { data: category, error: categoryError } = await supabase
       .from('categories')
       .select('id')
       .eq('id', validatedData.category_id)
       .single();
-    
+
     if (categoryError || !category) {
       throw new ApiError(400, 'Invalid category ID');
     }
-    
+
     // Create product
     const { data: product, error } = await supabase
       .from('products')
@@ -271,19 +271,19 @@ export async function POST(request: NextRequest) {
         )
       `)
       .single();
-    
+
     if (error) {
       throw new ApiError(500, 'Failed to create product', error);
     }
-    
+
     return NextResponse.json(
-      { 
+      {
         message: 'Product created successfully',
-        product 
+        product
       },
       { status: 201 }
     );
-    
+
   } catch (error) {
     return handleError(error);
   }
@@ -304,12 +304,12 @@ export async function GET_SINGLE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const supabase = createClient();
-    
+    const supabase = await createClient();
+
     // Validate UUID format
     const uuidSchema = z.string().uuid();
     const productId = uuidSchema.parse(params.id);
-    
+
     // Fetch product with related data
     const { data: product, error } = await supabase
       .from('products')
@@ -321,28 +321,27 @@ export async function GET_SINGLE(
           slug,
           description
         ),
-        reviews:reviews(
+        reviews(
           id,
           rating,
           title,
           body,
-          created_at,
-          user:auth.users(email)
+          created_at
         )
       `)
       .eq('id', productId)
       .single();
-    
+
     if (error || !product) {
       throw new ApiError(404, 'Product not found');
     }
-    
+
     // Calculate average rating
     const reviews = product.reviews || [];
     const avgRating = reviews.length > 0
       ? reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / reviews.length
       : 0;
-    
+
     return NextResponse.json({
       product: {
         ...product,
@@ -350,7 +349,7 @@ export async function GET_SINGLE(
         reviewCount: reviews.length,
       }
     });
-    
+
   } catch (error) {
     return handleError(error);
   }
@@ -365,27 +364,27 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const supabase = createClient();
-    
+    const supabase = await createClient();
+
     // Validate UUID
     const uuidSchema = z.string().uuid();
     const productId = uuidSchema.parse(params.id);
-    
+
     // Parse and validate request body
     const body = await request.json();
     const validatedData = productSchema.parse(body);
-    
+
     // Check if product exists
     const { data: existing } = await supabase
       .from('products')
       .select('id')
       .eq('id', productId)
       .single();
-    
+
     if (!existing) {
       throw new ApiError(404, 'Product not found');
     }
-    
+
     // Update product
     const { data: product, error } = await supabase
       .from('products')
@@ -403,16 +402,16 @@ export async function PUT(
         )
       `)
       .single();
-    
+
     if (error) {
       throw new ApiError(500, 'Failed to update product', error);
     }
-    
+
     return NextResponse.json({
       message: 'Product updated successfully',
       product
     });
-    
+
   } catch (error) {
     return handleError(error);
   }
@@ -427,28 +426,28 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    const supabase = createClient();
-    
+    const supabase = await createClient();
+
     // Validate UUID
     const uuidSchema = z.string().uuid();
     const productId = uuidSchema.parse(params.id);
-    
+
     // Parse and validate request body (partial)
     const body = await request.json();
     const partialSchema = productSchema.partial();
     const validatedData = partialSchema.parse(body);
-    
+
     // Check if product exists
     const { data: existing } = await supabase
       .from('products')
       .select('id')
       .eq('id', productId)
       .single();
-    
+
     if (!existing) {
       throw new ApiError(404, 'Product not found');
     }
-    
+
     // Update only provided fields
     const { data: product, error } = await supabase
       .from('products')
@@ -466,16 +465,16 @@ export async function PATCH(
         )
       `)
       .single();
-    
+
     if (error) {
       throw new ApiError(500, 'Failed to update product', error);
     }
-    
+
     return NextResponse.json({
       message: 'Product updated successfully',
       product
     });
-    
+
   } catch (error) {
     return handleError(error);
   }
@@ -490,38 +489,38 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const supabase = createClient();
-    
+    const supabase = await createClient();
+
     // Validate UUID
     const uuidSchema = z.string().uuid();
     const productId = uuidSchema.parse(params.id);
-    
+
     // Check if product exists
     const { data: existing } = await supabase
       .from('products')
       .select('id, name')
       .eq('id', productId)
       .single();
-    
+
     if (!existing) {
       throw new ApiError(404, 'Product not found');
     }
-    
+
     // Delete product
     const { error } = await supabase
       .from('products')
       .delete()
       .eq('id', productId);
-    
+
     if (error) {
       throw new ApiError(500, 'Failed to delete product', error);
     }
-    
+
     return NextResponse.json({
       message: 'Product deleted successfully',
       deletedProduct: existing
     });
-    
+
   } catch (error) {
     return handleError(error);
   }

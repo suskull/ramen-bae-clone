@@ -38,6 +38,7 @@
   "exclude": [
     "node_modules",
     "archive-backend-course",
-    "supabase/functions"
+    "supabase/functions",
+    "archive"
   ]
 }

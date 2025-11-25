@@ -19,7 +19,7 @@
 // lib/supabase/client.ts (Client-side)
 import { createBrowserClient } from '@supabase/ssr';
 
-export function createClient() {
+export function createBrowserClientExample() {
   return createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -218,7 +218,7 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
-  signOut: async () => {},
+  signOut: async () => { },
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -249,9 +249,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signOut }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value= {{ user, loading, signOut }
+}>
+  { children }
+  </AuthContext.Provider>
   );
 }
 
@@ -334,54 +335,59 @@ export function SignUpForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit= { handleSubmit } className = "space-y-4" >
       <div>
-        <label className="block mb-1 font-medium">Name</label>
-        <input
-          type="text"
-          value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          className="w-full p-2 border rounded"
-        />
-        {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
-      </div>
+      <label className="block mb-1 font-medium" > Name </label>
+        < input
+  type = "text"
+  value = { formData.name }
+  onChange = {(e) => setFormData({ ...formData, name: e.target.value })
+}
+className = "w-full p-2 border rounded"
+  />
+  { errors.name && <p className="text-red-500 text-sm mt-1"> { errors.name } </p> }
+  </div>
 
-      <div>
-        <label className="block mb-1 font-medium">Email</label>
-        <input
-          type="email"
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          className="w-full p-2 border rounded"
-        />
-        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-      </div>
+  < div >
+  <label className="block mb-1 font-medium" > Email </label>
+    < input
+type = "email"
+value = { formData.email }
+onChange = {(e) => setFormData({ ...formData, email: e.target.value })}
+className = "w-full p-2 border rounded"
+  />
+  { errors.email && <p className="text-red-500 text-sm mt-1"> { errors.email } </p> }
+  </div>
 
-      <div>
-        <label className="block mb-1 font-medium">Password</label>
-        <input
-          type="password"
-          value={formData.password}
-          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-          className="w-full p-2 border rounded"
-        />
-        {errors.password && (
-          <p className="text-red-500 text-sm mt-1">{errors.password}</p>
-        )}
-      </div>
+  < div >
+  <label className="block mb-1 font-medium" > Password </label>
+    < input
+type = "password"
+value = { formData.password }
+onChange = {(e) => setFormData({ ...formData, password: e.target.value })}
+className = "w-full p-2 border rounded"
+  />
+{
+  errors.password && (
+    <p className="text-red-500 text-sm mt-1"> { errors.password } </p>
+        )
+}
+  </div>
 
-      {errors.general && (
-        <div className="p-3 bg-red-50 text-red-700 rounded">{errors.general}</div>
-      )}
+{
+  errors.general && (
+    <div className="p-3 bg-red-50 text-red-700 rounded" > { errors.general } </div>
+      )
+}
 
-      <button
+<button
         type="submit"
-        disabled={loading}
-        className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50"
-      >
-        {loading ? 'Creating account...' : 'Sign Up'}
-      </button>
-    </form>
+disabled = { loading }
+className = "w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50"
+  >
+  { loading? 'Creating account...': 'Sign Up' }
+  </button>
+  </form>
   );
 }
 
