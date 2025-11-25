@@ -73,17 +73,24 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 ## Project Structure
 
+Clean, organized structure with clear separation of concerns. See [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) for detailed documentation.
+
 ```
-src/
-├── app/              # Next.js app router pages
-├── components/       # React components
-│   ├── layout/      # Header, Footer, Navigation
-│   ├── product/     # Product-related components
-│   ├── cart/        # Shopping cart components
-│   ├── reviews/     # Review components
-│   └── ui/          # Reusable UI components
-├── hooks/           # Custom React hooks
-└── lib/             # Utility functions and configurations
+├── src/                    # Application source code
+│   ├── app/               # Next.js app router pages
+│   ├── components/        # React components
+│   ├── hooks/             # Custom React hooks
+│   └── lib/               # Utilities and configurations
+├── docs/                   # All project documentation
+│   ├── guides/            # Setup and usage guides
+│   ├── optimization/      # Performance optimization docs
+│   └── database-migration/ # Database sync and migration
+├── scripts/               # Utility scripts
+├── supabase/              # Supabase configuration
+│   ├── functions/         # Edge Functions
+│   └── migrations/        # Database migrations
+├── archive/               # Archived learning materials
+└── public/                # Static assets
 ```
 
 ## Development
@@ -102,6 +109,32 @@ This project follows a spec-driven development approach. See the `.kiro/specs/ra
 - `pnpm start` - Start production server
 - `pnpm lint` - Run ESLint
 - `pnpm type-check` - Run TypeScript type checking
+
+## Deployment
+
+Ready to deploy to production? See our comprehensive deployment guides:
+
+- **[Complete Deployment Guide](./docs/DEPLOYMENT_GUIDE.md)** - Full production deployment walkthrough
+- **[Quick Reference](./docs/DEPLOYMENT_QUICK_REFERENCE.md)** - Common commands and checklists
+- **[Troubleshooting](./docs/DEPLOYMENT_TROUBLESHOOTING.md)** - Solutions to common issues
+
+### Quick Deploy
+
+```bash
+# 1. Link Supabase project
+supabase link --project-ref your-project-ref
+
+# 2. Push database schema
+supabase db push
+
+# 3. Deploy Edge Functions
+supabase functions deploy
+
+# 4. Deploy to Vercel
+vercel --prod
+```
+
+See the [Deployment Guide](./docs/DEPLOYMENT_GUIDE.md) for detailed instructions.
 
 ## Contributing
 
@@ -154,6 +187,14 @@ node docs/database-migration/scripts/export-local-data.js
 
 See [DATABASE_MIGRATION.md](./DATABASE_MIGRATION.md) for details.
 
+## Documentation
+
+All documentation is organized in the `docs/` directory:
+
+- **[docs/guides/](./docs/guides/)** - Setup guides, API testing, cart strategies
+- **[docs/optimization/](./docs/optimization/)** - Bundle analysis, image optimization, mobile performance
+- **[docs/database-migration/](./docs/database-migration/)** - Database sync, migration, and seeding workflows
+
 ## Archive
 
-Backend course learning materials have been moved to `archive-backend-course/` for reference.
+Learning materials and backend course exercises are in `archive/` for reference.

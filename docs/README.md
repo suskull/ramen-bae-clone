@@ -10,6 +10,12 @@ Welcome to the Ramen Bae project documentation!
 - **[Supabase Quick Reference](./SUPABASE_QUICK_REFERENCE.md)** - Common commands and patterns
 - **[Supabase FAQ](./SUPABASE_FAQ.md)** - Frequently asked questions ⭐
 
+### 🌐 Deployment
+
+- **[Deployment Guide](./DEPLOYMENT_GUIDE.md)** - Complete production deployment guide ⭐
+- **[Deployment Quick Reference](./DEPLOYMENT_QUICK_REFERENCE.md)** - Quick commands and checklists
+- **[Deployment Troubleshooting](./DEPLOYMENT_TROUBLESHOOTING.md)** - Solutions to common deployment issues
+
 ### 🔧 Development Workflows
 
 - **[Supabase Workflow](./SUPABASE_WORKFLOW.md)** - Complete guide for schema changes and migrations
@@ -34,6 +40,9 @@ Welcome to the Ramen Bae project documentation!
 #### Set up my development environment
 → [Environment Quick Start](./ENVIRONMENT_QUICK_START.md)
 
+#### Deploy to production
+→ [Deployment Guide](./DEPLOYMENT_GUIDE.md) or [Quick Reference](./DEPLOYMENT_QUICK_REFERENCE.md)
+
 #### Add a new table to the database
 → [Supabase Workflow - Adding a New Table](./SUPABASE_WORKFLOW.md#workflow-1-adding-a-new-table)
 
@@ -50,16 +59,22 @@ Welcome to the Ramen Bae project documentation!
 → [Supabase Quick Reference - Pulling Latest Changes](./SUPABASE_QUICK_REFERENCE.md#-pulling-latest-changes-team-member)
 
 #### Deploy schema changes to production
-→ [Supabase Workflow - Step 7](./SUPABASE_WORKFLOW.md#step-7-deploy-to-production)
+→ [Deployment Guide - Supabase Setup](./DEPLOYMENT_GUIDE.md#supabase-production-setup)
 
 #### Fix a migration error
 → [Supabase Workflow - Fixing a Migration Error](./SUPABASE_WORKFLOW.md#scenario-2-fixing-a-migration-error)
+
+#### Rollback a deployment
+→ [Deployment Guide - Rollback Procedures](./DEPLOYMENT_GUIDE.md#rollback-procedures)
 
 ## 📋 Documentation Structure
 
 ```
 docs/
 ├── README.md                           # This file
+├── DEPLOYMENT_GUIDE.md                 # Complete deployment guide ⭐
+├── DEPLOYMENT_QUICK_REFERENCE.md       # Quick deployment commands
+├── DEPLOYMENT_TROUBLESHOOTING.md       # Deployment issue solutions
 ├── SUPABASE_WORKFLOW.md                # Complete Supabase workflow
 ├── SUPABASE_QUICK_REFERENCE.md         # Quick commands and patterns
 ├── SUPABASE_SUMMARY.md                 # Best practices overview
@@ -141,10 +156,13 @@ node docs/database-migration/scripts/export-local-data.js
 
 ### Common Issues
 
+- **Deployment fails** → [Deployment Troubleshooting](./DEPLOYMENT_TROUBLESHOOTING.md)
 - **Environment variable not found** → [Environment Quick Start](./ENVIRONMENT_QUICK_START.md#common-issues)
 - **Migration fails** → [Supabase Workflow - Troubleshooting](./SUPABASE_WORKFLOW.md#troubleshooting)
 - **Types out of sync** → [Supabase Workflow - Types Out of Sync](./SUPABASE_WORKFLOW.md#types-out-of-sync)
 - **Wrong database** → [Environment Quick Start - Common Issues](./ENVIRONMENT_QUICK_START.md#still-using-wrong-database)
+- **Stripe issues** → [Deployment Troubleshooting - Stripe](./DEPLOYMENT_TROUBLESHOOTING.md#stripe-payment-issues)
+- **Images not loading** → [Deployment Troubleshooting - Images](./DEPLOYMENT_TROUBLESHOOTING.md#image-loading-issues)
 
 ### External Resources
 
@@ -160,12 +178,20 @@ node docs/database-migration/scripts/export-local-data.js
 2. Read [Supabase Quick Reference](./SUPABASE_QUICK_REFERENCE.md)
 3. Review [Supabase Summary](./SUPABASE_SUMMARY.md)
 4. Bookmark [Supabase Workflow](./SUPABASE_WORKFLOW.md) for reference
+5. When ready to deploy, see [Deployment Guide](./DEPLOYMENT_GUIDE.md)
 
 ### For Experienced Developers
 
 1. Skim [Supabase Quick Reference](./SUPABASE_QUICK_REFERENCE.md)
 2. Review [Environment Summary](./ENVIRONMENT_SUMMARY.md)
 3. Check [Database Migration README](./database-migration/README.md)
+4. For deployment, use [Deployment Quick Reference](./DEPLOYMENT_QUICK_REFERENCE.md)
+
+### For DevOps/Deployment
+
+1. Read [Deployment Guide](./DEPLOYMENT_GUIDE.md) thoroughly
+2. Keep [Deployment Quick Reference](./DEPLOYMENT_QUICK_REFERENCE.md) handy
+3. Review [Supabase Workflow - Production](./SUPABASE_WORKFLOW.md#step-7-deploy-to-production)
 
 ## 📝 Contributing
 
